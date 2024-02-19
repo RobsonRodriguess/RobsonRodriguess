@@ -5,8 +5,8 @@
 - 🌱 Além disso, estou constantemente aprendendo e explorando novas tecnologias para acompanhar as tendências do mercado e contribuir para projetos que possam fazer a diferença.
 
 <div class="status">
-    <img height="180" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&theme=radical" alt="Status do GitHub">
-    <img height="180" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&theme=radical" alt="Top Linguagens">
+    <img height="150" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&theme=radical" alt="Status do GitHub">
+    <img height="150" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&theme=radical" alt="Top Linguagens">
 </div>
 
 <div style="display: inline_block; margin-top: 40px;">
