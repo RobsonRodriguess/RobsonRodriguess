@@ -4,10 +4,12 @@
 - 💻 Tenho experiência com C, banco de dados MySQL e Java, e estou sempre em busca de novos desafios para expandir meu conhecimento e aprimorar minhas habilidades de programação.
 - 🌱 Além disso, estou constantemente aprendendo e explorando novas tecnologias para acompanhar as tendências do mercado e contribuir para projetos que possam fazer a diferença.
 
-<div class="status">
-    <img height="150" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&theme=radical" alt="Status do GitHub">
-    <img height="150" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&theme=radical" alt="Top Linguagens">
-</div>
+<div>
+  <a href="https://github.com/RobsonRodriguess">
+    <img height="200em" class="color" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&count_private=true&show_icons=true&bg_color=30,000000,4169E1&title_color=fff&text_color=fff" />
+    <img height="200em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=donut&bg_color=30,4169E1,000000&title_color=fff&text_color=fff" />
+  </a>
+ </div>
 
 <div style="display: inline_block; margin-top: 40px;">
     <img align="center" alt="Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg">
