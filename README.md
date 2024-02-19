@@ -17,7 +17,7 @@
     <img align="center" alt="CSS" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg">
     <img align="center" alt="C" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg">
     <img align="center" alt="JavaScript" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-plain.svg">
-    <img align="right" src="https://tenor.com/pt-BR/view/gg-gif-13776365632968239169.gif" alt="Zoro" width="120">
+    <img align="right" src="https://tenor.com/pt-BR/view/zoro-one-piece-training-gif-19618441.gif" alt="Zoro" width="120">
 </div>
 
   <br>
