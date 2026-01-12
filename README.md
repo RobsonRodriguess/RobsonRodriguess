@@ -65,27 +65,6 @@ Transformo ideias em sistemas funcionais e experiências interativas.
 </div>
 
 
-## 🧩 GitHub Overview
-
-<div align="center">
-
-<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat-square" />
-
-<br><br>
-
-<img 
-  src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true&include_all_commits=true" 
-  height="180"
-/>
-
-<img 
-  src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true" 
-  height="180"
-/>
-
-</div>
-
-
 ## 🌐 Conecte-se comigo
 
 <div align="center">
@@ -104,4 +83,3 @@ Transformo ideias em sistemas funcionais e experiências interativas.
 
 </div>
 
----
