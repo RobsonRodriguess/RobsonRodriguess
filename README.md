@@ -4,31 +4,28 @@
 - 💻 Tenho experiência com C, banco de dados MySQL e Java, e estou sempre em busca de novos desafios para expandir meu conhecimento e aprimorar minhas habilidades de programação.
 - 🌱 Além disso, estou constantemente aprendendo e explorando novas tecnologias para acompanhar as tendências do mercado e contribuir para projetos que possam fazer a diferença.
 
-<div>
+<div align="center">
   <a href="https://github.com/RobsonRodriguess">
-    <img height="200em" class="color" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&count_private=true&show_icons=true&bg_color=30,000000,4169E1&title_color=fff&text_color=fff" />
-    <img height="200em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=donut&bg_color=30,4169E1,000000&title_color=fff&text_color=fff" />
+    <img height="180em" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&count_private=true&show_icons=true&bg_color=30,000000,4169E1&title_color=fff&text_color=fff" />
+    <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&bg_color=30,4169E1,000000&title_color=fff&text_color=fff" />
   </a>
- </div>
+</div>
 
 <div style="display: inline_block; margin-top: 40px;">
     <img align="center" alt="Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg">
     <img align="center" alt="BootStrap" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain.svg">
     <img align="center" alt="Laravel" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/laravel/laravel-original.svg">
-    <img align="center" alt="Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/lua/lua-original.svg">
+    <img align="center" alt="Lua" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/lua/lua-original.svg">
     <img align="center" alt="HTML" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg">
     <img align="center" alt="CSS" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg">
     <img align="center" alt="C" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg">
     <img align="center" alt="JavaScript" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-plain.svg">
-    <img align="right" src= "https://github.com/RobsonRodriguess/RobsonRodriguess/assets/137328069/6b9ddf5b-9242-401d-9ea3-b071f1f8341c" width="120">
+    <img align="right" src="https://github.com/RobsonRodriguess/RobsonRodriguess/assets/137328069/6b9ddf5b-9242-401d-9ea3-b071f1f8341c" width="120">
     <img align="center" alt="PostgreSQL" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg">
     <img align="center" alt="MySQL" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original.svg">
-<img align="right" src= "![work-internet](https://github.com/RobsonRodriguess/RobsonRodriguess/assets/137328069/6b9ddf5b-9242-401d-9ea3-b071f1f8341c)">
-
 </div>
 
-  <br>
-</div>
+<br>
 
 <div style="margin-top: 30px;">
     <br>
