@@ -15,7 +15,13 @@
 🧠 **Foco atual:** Full Stack, Java, C e Arquitetura de Software  
 🎮 **Extra:** Desenvolvimento de jogos no **Roblox (Lua)**  
 
-> Transformo ideias em sistemas funcionais e experiências interativas.
+ 
+ ## 📚 Atualmente estudando
+- Front-end moderno (CSS avançado e JavaScript)
+- Melhoria de UI/UX
+- Aplicações web com foco social
+
+Transformo ideias em sistemas funcionais e experiências interativas.
 
 ---
 
@@ -28,61 +34,53 @@
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Tecnologias e Ferramentas
 
 <div align="center">
 
-### 💻 Core & Games
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
-![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)
-![Roblox](https://img.shields.io/badge/Roblox_Studio-000000?style=for-the-badge&logo=roblox&logoColor=white)
+### 💻 Core, Games & Desenvolvimento
+![Java](https://img.shields.io/badge/Java-000000?style=for-the-badge&logo=openjdk)
+![C](https://img.shields.io/badge/C-000000?style=for-the-badge&logo=c)
+![Lua](https://img.shields.io/badge/Lua-000000?style=for-the-badge&logo=lua)
+![Roblox Studio](https://img.shields.io/badge/Roblox_Studio-000000?style=for-the-badge&logo=roblox)
 
-### 🌐 Web
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![HTML5](https://img.shields.io/badge/HTML5-000000?style=for-the-badge&logo=html5)
+![CSS3](https://img.shields.io/badge/CSS3-000000?style=for-the-badge&logo=css3)
+![JavaScript](https://img.shields.io/badge/JavaScript-000000?style=for-the-badge&logo=javascript)
+![React](https://img.shields.io/badge/React-000000?style=for-the-badge&logo=react)
+![Vite](https://img.shields.io/badge/Vite-000000?style=for-the-badge&logo=vite)
 
 ### 🗄️ Backend & DevOps
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-000000?style=for-the-badge&logo=mysql)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-000000?style=for-the-badge&logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-000000?style=for-the-badge&logo=docker)
+
+### 🎨 Design, Navegação & Ferramentas
+![Figma](https://img.shields.io/badge/Figma-000000?style=for-the-badge&logo=figma)
+![Brave](https://img.shields.io/badge/Brave-000000?style=for-the-badge&logo=brave)
+![Git](https://img.shields.io/badge/Git-000000?style=for-the-badge&logo=git)
+![GitHub](https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github)
+![VS Code](https://img.shields.io/badge/VS_Code-000000?style=for-the-badge&logo=visualstudiocode)
 
 </div>
+
 
 ## 🧩 GitHub Overview
 
 <div align="center">
 
-<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat" />
+<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat-square" />
 
 <br><br>
 
-<!-- Main Stats -->
 <img 
-  src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true&count_private=true&include_all_commits=true" 
-  height="170"
+  src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true&include_all_commits=true" 
+  height="180"
 />
 
 <img 
-  src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true&langs_count=6" 
-  height="170"
-/>
-
-<br><br>
-
-<!-- Streak -->
-<img 
-  src="https://streak-stats.demolab.com?user=RobsonRodrigues&theme=dracula&hide_border=true" 
-/>
-
-<br><br>
-
-<!-- Trophies -->
-<img 
-  src="https://github-profile-trophy.vercel.app/?username=RobsonRodrigues&theme=dracula&no-frame=true&row=1&column=6" 
+  src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true" 
+  height="180"
 />
 
 </div>
