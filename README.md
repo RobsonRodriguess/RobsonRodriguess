@@ -52,34 +52,13 @@
 
 </div>
 
-## 📊 GitHub Stats
-
 <div align="center">
 
-<!-- Profile Views -->
-<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat" />
+<img src="https://streak-stats.demolab.com?user=RobsonRodrigues&theme=dracula&hide_border=true" />
 
 <br><br>
 
-<!-- GitHub Stats -->
-<img 
-  src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true&count_private=true&include_all_commits=true&cache_seconds=86400" 
-  height="165"
-/>
-
-<!-- Top Languages -->
-<img 
-  src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true&langs_count=8&cache_seconds=86400" 
-  height="165"
-/>
-
-<br><br>
-
-<!-- Streak Stats -->
-<img 
-  src="https://streak-stats.demolab.com?user=RobsonRodrigues&theme=dracula&hide_border=true&date_format=j%20M%5B%20Y%5D" 
-  height="165"
-/>
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=RobsonRodrigues&theme=dracula&hide_border=true" />
 
 </div>
 
@@ -103,9 +82,3 @@
 </div>
 
 ---
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/RobsonRodrigues/RobsonRodrigues/output/github-contribution-grid-snake-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/RobsonRodrigues/RobsonRodrigues/output/github-contribution-grid-snake.svg">
-  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/RobsonRodrigues/RobsonRodrigues/output/github-contribution-grid-snake.svg">
-</picture>
