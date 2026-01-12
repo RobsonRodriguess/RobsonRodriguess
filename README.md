@@ -52,22 +52,37 @@
 
 </div>
 
----
-
 ## 📊 GitHub Stats
 
 <div align="center">
 
-<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat-square" />
+<!-- Profile Views -->
+<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat" />
 
 <br><br>
 
-<img height="170em" src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true" />
-<img height="170em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true" />
+<!-- GitHub Stats -->
+<img 
+  src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true&count_private=true&include_all_commits=true&cache_seconds=86400" 
+  height="165"
+/>
+
+<!-- Top Languages -->
+<img 
+  src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true&langs_count=8&cache_seconds=86400" 
+  height="165"
+/>
+
+<br><br>
+
+<!-- Streak Stats -->
+<img 
+  src="https://streak-stats.demolab.com?user=RobsonRodrigues&theme=dracula&hide_border=true&date_format=j%20M%5B%20Y%5D" 
+  height="165"
+/>
 
 </div>
 
----
 
 ## 🌐 Conecte-se comigo
 
