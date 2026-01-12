@@ -52,13 +52,38 @@
 
 </div>
 
+## 🧩 GitHub Overview
+
 <div align="center">
 
-<img src="https://streak-stats.demolab.com?user=RobsonRodrigues&theme=dracula&hide_border=true" />
+<img src="https://komarev.com/ghpvc/?username=RobsonRodrigues&label=Profile%20Views&color=7F2CCB&style=flat" />
 
 <br><br>
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=RobsonRodrigues&theme=dracula&hide_border=true" />
+<!-- Main Stats -->
+<img 
+  src="https://github-readme-stats.vercel.app/api?username=RobsonRodrigues&show_icons=true&theme=dracula&hide_border=true&count_private=true&include_all_commits=true" 
+  height="170"
+/>
+
+<img 
+  src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodrigues&layout=compact&theme=dracula&hide_border=true&langs_count=6" 
+  height="170"
+/>
+
+<br><br>
+
+<!-- Streak -->
+<img 
+  src="https://streak-stats.demolab.com?user=RobsonRodrigues&theme=dracula&hide_border=true" 
+/>
+
+<br><br>
+
+<!-- Trophies -->
+<img 
+  src="https://github-profile-trophy.vercel.app/?username=RobsonRodrigues&theme=dracula&no-frame=true&row=1&column=6" 
+/>
 
 </div>
 
