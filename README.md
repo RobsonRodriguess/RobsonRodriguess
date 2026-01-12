@@ -1,10 +1,8 @@
 <div align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=9E42F5&center=true&vCenter=true&width=435&lines=Robson+Rodrigues;Full+Stack+Developer;Game+Dev+(Roblox/Lua);Formado+no+IFG" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=9E42F5&center=true&vCenter=true&width=435&lines=Robson+Rodrigues;Full+Stack+Developer;Game+Dev+(Roblox%2FLua);Formado+no+IFG" alt="Typing SVG" />
   </a>
 </div>
-
-<br>
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%" />
@@ -13,9 +11,9 @@
 ### 🚀 Sobre Mim
 > 🎓 **Formação:** Análise e Desenvolvimento de Sistemas pelo **IFG**.
 >
-> 💻 **Foco:** Sou apaixonado por transformar ideias em código, seja criando soluções web complexas ou desenvolvendo jogos imersivos.
+> 💻 **Foco:** Transformar ideias em código. Do TCC focado em **eHealth** até o desenvolvimento de jogos no **Roblox**.
 >
-> 🧠 **Mindset:** *"Sempre em busca de novos desafios para expandir meu conhecimento."*
+> 🧠 **Mindset:** *"Expandindo conhecimentos em Java, C e Desenvolvimento Web."*
 
 ---
 
@@ -23,8 +21,8 @@
 
 | 🧠 **Mind Health (TCC)** | ⚔️ **Eclipse Tower Defense** |
 | :--- | :--- |
-| Projeto focado em **eHealth** e tecnologias digitais para saúde mental. Desenvolvido com foco em acessibilidade e inovação. | Jogo de estratégia desenvolvido na plataforma **Roblox**. Foco em mecânicas de defesa, balanceamento e script em **Lua**. |
-| *Stack: React, Docker, Web* | *Stack: Lua, Roblox Studio, Game Design* |
+| Projeto de **Saúde Mental** e tecnologias digitais. Foco em acessibilidade e bem-estar do usuário. | Jogo de estratégia no **Roblox**. Desenvolvimento de mecânicas de defesa, scripts e balanceamento. |
+| *Stack: React, Docker, Web* | *Stack: Lua, Roblox Studio* |
 
 ---
 
@@ -32,39 +30,38 @@
 
 <div align="center">
 
-**💻 Linguagens Principais** <img style="margin: 5px" src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white">
+**💻 Linguagens** ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
+![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)
 
-**🌐 Web & Frontend** <img style="margin: 5px" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
-<img style="margin: 5px" src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E">
-<img style="margin: 5px" src="https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white">
+**🌐 Web & Frontend** ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 
-**🗄️ Backend & Dados** <img style="margin: 5px" src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white">
+**🗄️ Backend & Dados** ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 
-**⚙️ DevOps & Ferramentas** <img style="margin: 5px" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
-<img style="margin: 5px" src="https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white">
+**⚙️ Ferramentas** ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
+![Roblox Studio](https://img.shields.io/badge/Roblox%20Studio-000000?style=for-the-badge&logo=roblox&logoColor=white)
 
 </div>
 
 ---
 
-### 📊 Estatísticas (Github Stats)
+### 📊 Estatísticas
 
 <div align="center">
-  <a href="https://github.com/anuraghazra/github-readme-stats">
-    <img height="180em" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true"/>
-  </a>
-  
-  <br><br>
 
-  <a href="https://github.com/anuraghazra/github-readme-stats">
-    <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&theme=tokyonight"/>
-  </a>
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&theme=tokyonight)
+
+<br>
+
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&theme=tokyonight)
+
 </div>
 
 <br>
