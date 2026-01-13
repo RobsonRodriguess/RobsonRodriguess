@@ -17,7 +17,7 @@
 
  
  ## 📚 Atualmente estudando
-- Front-end moderno (CSS avançado e JavaScript)
+- Front-end moderno React
 - Melhoria de UI/UX
 - Aplicações web com foco social
 
@@ -68,10 +68,6 @@ Transformo ideias em sistemas funcionais e experiências interativas.
 ## 🌐 Conecte-se comigo
 
 <div align="center">
-
-<a href="https://instagram.com/robsonkzl" target="_blank">
-  <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"/>
-</a>
 
 <a href="https://discord.gg/1174889634954743829" target="_blank">
   <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white"/>
