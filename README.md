@@ -28,48 +28,34 @@ Gosto de projetos que saem do papel e funcionam no mundo real.
 
 ---
 
-## ⭐ Projeto Principal
+### 🏆 Projeto em Destaque
+
+#### 🛒 Candangos Shop (Guild E-commerce)
+> Uma plataforma full-stack de vendas digitais para comunidades de jogos (Hytale), com foco em segurança, performance e experiência do usuário.
 
 <div align="center">
-
-# 🛒 Hywer Store  
-### Plataforma de E-commerce Digital para Servidores (Hytale / Minecraft)
-
+  <a href="https://github.com/RobsonRodriguess/Candangos-Shop">
+    <img src="https://raw.githubusercontent.com/RobsonRodriguess/Candangos-Shop/main/src/assets/home.png" width="100%" alt="Hywer Store Cover" />
+  </a>
 </div>
 
-<p align="center">
-Sistema profissional de venda de itens digitais com <strong>pagamentos automáticos</strong>,  
-<strong>entrega instantânea</strong> e <strong>painel administrativo completo</strong>.
-</p>
+<br />
 
----
+**🛠️ Stack Tecnológica:**
+![React](https://img.shields.io/badge/-React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
+![Supabase](https://img.shields.io/badge/-Supabase-181818?style=flat&logo=supabase&logoColor=3ECF8E)
+![Tailwind CSS](https://img.shields.io/badge/-Tailwind-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/-Framer_Motion-0055FF?style=flat&logo=framer&logoColor=white)
 
-### 🚀 Funcionalidades
+**✨ Destaques da Engenharia:**
+* 🔐 **Segurança Avançada:** Implementação de **Row Level Security (RLS)** no PostgreSQL para proteção total dos dados.
+* 💳 **Sistema de Pagamentos:** Integração de **Pix Automático** com confirmação em tempo real via Edge Functions.
+* 🤖 **Integração Discord:** Autenticação OAuth2 e sincronização de dados do servidor (status/membros).
+* 📊 **Painel Admin:** Dashboard financeiro protegido para gestão de pedidos e métricas.
 
-#### 👤 Área do Jogador
-- Autenticação segura via **Discord**
-- Carrinho de compras moderno e responsivo
-- Histórico de pedidos e status em tempo real
-
-#### 💳 Pagamentos
-- **Pix automático** (QR Code + liberação imediata)
-- Cartão de crédito
-- Integração com **Mercado Pago / Stripe**
-- Processamento seguro via funções serverless
-
-#### 🧑‍💼 Painel Administrativo
-- Dashboard financeiro (vendas e faturamento)
-- Gerenciamento completo de pedidos
-- Segurança avançada com **Row Level Security (RLS)**
-
----
-
-### 🛠 Stack do Projeto
-
-<div align="center">
-
-<img src="https://skillicons.dev/icons?i=react,ts,tailwind,vite,supabase,nodejs,postgres&theme=dark" />
-
+<div align="right">
+  <a href="https://github.com/RobsonRodriguess/hywer-store"><strong>Ver Código Fonte ↗</strong></a>
 </div>
 
 ---
