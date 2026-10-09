@@ -1,0 +1,4 @@
+import { createServer } from "node:http"; import { readFile } from "node:fs/promises"; import { join, extname, dirname } from "node:path"; import { fileURLToPath } from "node:url";
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const types = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".png": "image/png" };
+createServer(async (q, s) => { try { const p = decodeURIComponent(new URL(q.url, "http://x").pathname); const b = await readFile(join(root, p === "/" ? "generator/preview.html" : p)); s.writeHead(200, { "content-type": types[extname(p)] || "application/octet-stream", "cache-control": "no-store" }); s.end(b); } catch { s.writeHead(404); s.end(); } }).listen(8765, () => console.log("http://localhost:8765/generator/preview.html"));

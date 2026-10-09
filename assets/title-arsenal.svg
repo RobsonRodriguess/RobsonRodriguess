@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="66" viewBox="0 0 900 66" fill="none" role="img"><title>ARSENAL</title><style>@keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}.blink{animation:blink 1.1s steps(1) infinite}.t{animation:fl 7s infinite;animation-delay:2.7s}@keyframes fl{0%,40%,43%,46%,100%{opacity:1}41%,44%{opacity:.35}}.dot{animation:sweep 4.5s cubic-bezier(.6,0,.4,1) infinite;animation-delay:1.2s}@keyframes sweep{0%{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(840px);opacity:0}}</style><defs>
+        <clipPath id="c"><rect width="900" height="66" rx="14"/></clipPath>
+        <linearGradient id="acc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff2e97"/><stop offset="1" stop-color="#7f2ccb"/></linearGradient>
+        <linearGradient id="bg" x1="0" x2="1"><stop offset="0" stop-color="#1a0a2e"/><stop offset=".6" stop-color="#0c0616"/><stop offset="1" stop-color="#0c0616"/></linearGradient>
+        <radialGradient id="dg"><stop offset="0" stop-color="#f0abfc"/><stop offset="1" stop-color="#f0abfc" stop-opacity="0"/></radialGradient>
+        <filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <g clip-path="url(#c)">
+        <rect width="900" height="66" fill="url(#bg)"/>
+        <rect width="6" height="66" fill="url(#acc)"/>
+        <line x1="24" x2="876" y1="56" y2="56" stroke="#2c1450" stroke-width="1"/>
+        <g class="dot"><ellipse cx="30" cy="56" rx="38" ry="2.4" fill="url(#dg)"/></g>
+      </g>
+      <rect x=".5" y=".5" width="899" height="65" rx="13.5" stroke="#2c1450"/>
+      <text x="26" y="40" font-family="ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, Menlo, 'DejaVu Sans Mono', monospace" font-size="14" font-weight="700" fill="#ff2e97">04 //</text>
+      <text x="86" y="42" font-family="'Arial Black', 'Segoe UI Black', 'Helvetica Neue', Impact, sans-serif" font-weight="900" font-size="25" letter-spacing="2" fill="#fff" filter="url(#gl)" class="t">ARSENAL</text>
+      <text x="874" y="39" font-family="ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, Menlo, 'DejaVu Sans Mono', monospace" font-size="11.5" letter-spacing="2.5" fill="#a78bfa" text-anchor="end">SISTEMA ORBITAL DE STACK <tspan fill="#22d3ee" class="blink">█</tspan></text></svg>
