@@ -12,7 +12,7 @@
 
 <br/>
 
-<a id="sobre"></a>
+<a name="sobre"></a>
 <img src="./assets/title-sobre.svg" width="100%" alt="01 // Sobre mim" />
 
 <img src="./assets/terminal.svg" width="100%" alt="Terminal: whoami — Robson Rodrigues, Full Stack Developer em Brasília-DF. Crio produtos digitais completos, do front-end animado ao back-end seguro." />
@@ -34,7 +34,7 @@ Sou desenvolvedor **Full Stack** focado em criar **produtos digitais completos**
 
 <br/>
 
-<a id="projetos"></a>
+<a name="projetos"></a>
 <img src="./assets/title-destaque.svg" width="100%" alt="02 // Projeto lendário" />
 
 <a href="https://www.gabrieladecoracoes.com.br/">
@@ -79,7 +79,7 @@ Sou desenvolvedor **Full Stack** focado em criar **produtos digitais completos**
 
 <br/>
 
-<a id="arsenal"></a>
+<a name="arsenal"></a>
 <img src="./assets/title-arsenal.svg" width="100%" alt="04 // Arsenal" />
 
 <img src="./assets/stack-orbit.svg" width="100%" alt="Sistema orbital de stack: front-end (React, Next.js, TypeScript, JavaScript, Tailwind, Vite), back-end (Node.js, Express, NestJS, Prisma, Supabase, Spring, Laravel) e dados e infra (PostgreSQL, MySQL, MongoDB, Redis, Docker, Linux, Nginx, Vercel, Git, GitHub Actions)" />
@@ -107,7 +107,7 @@ Sou desenvolvedor **Full Stack** focado em criar **produtos digitais completos**
 
 <br/>
 
-<a id="placar"></a>
+<a name="placar"></a>
 <img src="./assets/title-placar.svg" width="100%" alt="05 // Placar" />
 
 <div align="center">
@@ -125,7 +125,7 @@ Sou desenvolvedor **Full Stack** focado em criar **produtos digitais completos**
 
 <br/>
 
-<a id="contato"></a>
+<a name="contato"></a>
 <img src="./assets/title-contato.svg" width="100%" alt="06 // Multiplayer" />
 
 <p align="center">
