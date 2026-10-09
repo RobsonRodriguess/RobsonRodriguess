@@ -68,7 +68,7 @@ A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: cri
 <br/>
 
 <a id="projetos" name="projetos"></a>
-<img src="./assets/title-destaque.svg" width="100%" alt="02 // Projeto lendário" />
+<img src="./assets/title-destaque.svg" width="100%" alt="03 // Projeto lendário" />
 
 <a href="https://www.gabrieladecoracoes.com.br/">
   <img src="./assets/featured-gabriela.svg" width="100%" alt="Gabriela Decorações rodando ao vivo num notebook e num celular" />
@@ -99,7 +99,7 @@ A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: cri
 
 <br/>
 
-<img src="./assets/title-colecao.svg" width="100%" alt="03 // Coleção de projetos" />
+<img src="./assets/title-colecao.svg" width="100%" alt="04 // Coleção de projetos" />
 
 <p align="center">
   <a href="https://meu-portfolio-robsonrodrigues.vercel.app/"><img src="./assets/card-portfolio.svg" width="48%" alt="Portfólio RobsonDev — Next.js 16, React 19, Tailwind v4" /></a>
@@ -113,7 +113,7 @@ A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: cri
 <br/>
 
 <a id="arsenal" name="arsenal"></a>
-<img src="./assets/title-arsenal.svg" width="100%" alt="04 // Arsenal" />
+<img src="./assets/title-arsenal.svg" width="100%" alt="05 // Arsenal" />
 
 <img src="./assets/stack-orbit.svg" width="100%" alt="Sistema orbital de stack: front-end (React, Next.js, TypeScript, JavaScript, Tailwind, Vite), back-end (Node.js, Express, NestJS, Prisma, Supabase, Spring, Laravel) e dados e infra (PostgreSQL, MySQL, MongoDB, Redis, Docker, Linux, Nginx, Vercel, Git, GitHub Actions)" />
 
@@ -141,7 +141,7 @@ A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: cri
 <br/>
 
 <a id="placar" name="placar"></a>
-<img src="./assets/title-placar.svg" width="100%" alt="05 // Placar" />
+<img src="./assets/title-placar.svg" width="100%" alt="06 // Placar" />
 
 <div align="center">
 
@@ -159,7 +159,7 @@ A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: cri
 <br/>
 
 <a id="contato" name="contato"></a>
-<img src="./assets/title-contato.svg" width="100%" alt="06 // Multiplayer" />
+<img src="./assets/title-contato.svg" width="100%" alt="07 // Multiplayer" />
 
 <p align="center">
   <a href="https://www.linkedin.com/in/robson-rodrigues-dev/"><img src="./assets/btn-linkedin.svg" width="200" alt="LinkedIn" /></a>
