@@ -292,7 +292,7 @@ function terminal() {
       content += `<g opacity="0">${show(l.start)}${prompt(l.y)}</g>`;
       content += `<text x="${CMDX}" y="${l.y}" fill="#f5f3ff" clip-path="url(#ty${i})" textLength="${l.cmd.length * CW}" lengthAdjust="spacingAndGlyphs">${esc(l.cmd)}</text>`;
     } else if (l.out) {
-      content += `<g opacity="0">${show(l.start)}<text x="${X0}" y="${l.y}">${l.out.map(([s, c, w]) => `<tspan fill="${c}"${w ? ` font-weight="${w}"` : ""}>${esc(s)}</tspan>`).join("")}</text></g>`;
+      content += `<g opacity="0">${show(l.start)}<text x="${X0}" y="${l.y}">${l.out.map(([s, c, w]) => `<tspan fill="${c}"${w ? ` font-weight="${w}"` : ""}>${esc(s).replace(/ {2,}/g, (m) => " ".repeat(m.length))}</tspan>`).join("")}</text></g>`;
     } else {
       content += `<g opacity="0">${show(l.start)}${prompt(l.y)}</g>`;
     }
