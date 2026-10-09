@@ -3,10 +3,12 @@
 <img src="./assets/hero.svg" width="100%" alt="ROBSON RODRIGUES — Full Stack Developer · Press Start" />
 
 <a href="#sobre"><img src="./assets/nav-sobre.svg" width="150" alt="01 Sobre" /></a>
-<a href="#projetos"><img src="./assets/nav-projetos.svg" width="150" alt="02 Projetos" /></a>
-<a href="#arsenal"><img src="./assets/nav-arsenal.svg" width="150" alt="03 Arsenal" /></a>
-<a href="#placar"><img src="./assets/nav-placar.svg" width="150" alt="04 Placar" /></a>
-<a href="#contato"><img src="./assets/nav-contato.svg" width="150" alt="05 Contato" /></a>
+<a href="#startup"><img src="./assets/nav-startup.svg" width="150" alt="02 Startup" /></a>
+<a href="#projetos"><img src="./assets/nav-projetos.svg" width="150" alt="03 Projetos" /></a>
+<br/>
+<a href="#arsenal"><img src="./assets/nav-arsenal.svg" width="150" alt="04 Arsenal" /></a>
+<a href="#placar"><img src="./assets/nav-placar.svg" width="150" alt="05 Placar" /></a>
+<a href="#contato"><img src="./assets/nav-contato.svg" width="150" alt="06 Contato" /></a>
 
 </div>
 
@@ -29,6 +31,37 @@ Sou desenvolvedor **Full Stack** focado em criar **produtos digitais completos**
 - 🔭 Hoje: sites para clientes e o **Simula SISU 2026**
 - 🧩 Arquitetura, segurança e performance
 - 📍 **Brasília, DF** — aberto a projetos remotos e freelas
+
+</details>
+
+<br/>
+
+<a id="startup" name="startup"></a>
+<img src="./assets/title-startup.svg" width="100%" alt="02 // Minha startup — RDL Development" />
+
+<a href="https://rdldevelopment.dev">
+  <img src="./assets/featured-rdl.svg" width="100%" alt="Site da RDL Development rodando ao vivo num notebook e num celular" />
+</a>
+
+<img src="./assets/rdl-party.svg" width="100%" alt="Party RDL Development: Robson (full stack, front-end), Daniel (full stack, back-end e segurança) e Luiz (automação e integrações)" />
+
+<div align="center">
+
+<a href="https://rdldevelopment.dev"><img src="https://img.shields.io/badge/rdldevelopment.dev-7F2CCB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="rdldevelopment.dev" /></a>
+
+</div>
+
+<details>
+<summary><b>🚀 Sobre a RDL Development</b></summary>
+<br/>
+
+> **Tiramos ideias do papel e colocamos no ar.**
+
+A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: criamos **sites, aplicativos e sistemas sob medida**, do planejamento à entrega. Cada projeto é liderado por quem mais domina o assunto, com o apoio dos outros dois do início ao fim.
+
+**Como trabalhamos:** conversa → proposta com escopo, prazo e preço por escrito → construção em ciclos curtos → no ar, com medição e suporte.
+
+**Projetos entregues pela RDL:** Gabriela Decorações · Candangos Shop · Simula SISU
 
 </details>
 

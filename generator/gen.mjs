@@ -182,7 +182,7 @@ function hero() {
 
 /* ───────────────────────────── NAV ───────────────────────────── */
 function navButtons() {
-  const items = [["01", "SOBRE"], ["02", "PROJETOS"], ["03", "ARSENAL"], ["04", "PLACAR"], ["05", "CONTATO"]];
+  const items = [["01", "SOBRE"], ["02", "STARTUP"], ["03", "PROJETOS"], ["04", "ARSENAL"], ["05", "PLACAR"], ["06", "CONTATO"]];
   items.forEach(([num, label], i) => {
     const W = 164, H = 46;
     const style = `${BASE_STYLE}
@@ -204,11 +204,12 @@ function navButtons() {
 function titles() {
   const list = [
     ["sobre", "01", "SOBRE MIM", "PLAYER 1 · STATUS"],
-    ["destaque", "02", "PROJETO LENDÁRIO", "MISSÃO PRINCIPAL"],
-    ["colecao", "03", "COLEÇÃO DE PROJETOS", "CARTAS DESBLOQUEADAS"],
-    ["arsenal", "04", "ARSENAL", "SISTEMA ORBITAL DE STACK"],
-    ["placar", "05", "PLACAR", "DADOS AO VIVO DO GITHUB"],
-    ["contato", "06", "MULTIPLAYER", "CHAMA PRO CO-OP"],
+    ["startup", "02", "MINHA STARTUP", "GUILDA RDL DEVELOPMENT"],
+    ["destaque", "03", "PROJETO LENDÁRIO", "MISSÃO PRINCIPAL"],
+    ["colecao", "04", "COLEÇÃO DE PROJETOS", "CARTAS DESBLOQUEADAS"],
+    ["arsenal", "05", "ARSENAL", "SISTEMA ORBITAL DE STACK"],
+    ["placar", "06", "PLACAR", "DADOS AO VIVO DO GITHUB"],
+    ["contato", "07", "MULTIPLAYER", "CHAMA PRO CO-OP"],
   ];
   list.forEach(([id, num, text, sub], i) => {
     const W = 900, H = 66;
@@ -334,6 +335,7 @@ function terminal() {
 function achievements() {
   const W = 900, H = 122;
   const list = [
+    ["Fundou a RDL Development", "Startup de software com Daniel e Luiz"],
     ["Formado em ADS — IFG", "Análise e Desenvolvimento de Sistemas"],
     ["Primeiro site de cliente no ar", "Gabriela Decorações · 18 anos de mercado"],
     ["Pix automático em produção", "Candangos Shop · Supabase Edge Functions"],
@@ -379,16 +381,15 @@ function achievements() {
 }
 
 /* ───────────────────────────── PROJETO EM DESTAQUE ───────────────────────────── */
-function featured() {
+function featured({ file, url, desk, deskH, mob, mobH, click, chips, rank, title }) {
   const W = 900, H = 560, T = 24;
   const rand = rng(77);
   // notebook
-  const VX = 52, VY = 80, VW = 596, VH = 342, IMG_H = Math.round((3080 * VW) / 792);
+  const VX = 52, VY = 80, VW = 596, VH = 342, IMG_H = Math.round((deskH * VW) / 792);
   const maxD = IMG_H - VH;
   // celular
-  const PX = 708, PY = 158, PW = 160, PH = 344, PIMG_H = Math.round((4464 * PW) / 242);
+  const PX = 708, PY = 158, PW = 160, PH = 344, PIMG_H = Math.round((mobH * PW) / 242);
   const maxM = PIMG_H - PH;
-  const url = "gabrieladecoracoes.com.br";
 
   const scrollAnim = (stops) => {
     const times = stops.map((s) => s[0]), vals = stops.map((s) => `0 ${-s[1]}`);
@@ -405,10 +406,9 @@ function featured() {
   ut.push(23.5); uv.push(0);
 
   // cursor: caminha até "VER PROJETOS" e clica
-  const BX = 350, BY = 332;
+  const [BX, BY] = click;
   const cur = [[0, 560, 400], [2.2, 560, 400], [3.8, BX, BY], [4.3, BX, BY], [5.2, 470, 300], [9, 430, 260], [13, 520, 330], [17, 460, 280], [20, 560, 400], [T, 560, 400]];
 
-  const chips = ["React", "TypeScript", "Vite", "Tailwind", "shadcn/ui", "Vercel"];
   let cx = 40;
   const chipEls = chips.map((c, i) => {
     const w = c.length * 7.6 + 26;
@@ -461,7 +461,7 @@ function featured() {
       <text x="${UX}" y="68" font-family="${MONO}" font-size="11.5" fill="#e4e4e7" clip-path="url(#urlc)" textLength="${n(url.length * UCW)}" lengthAdjust="spacingAndGlyphs">${url}</text>
       <path d="M574 58a5.5 5.5 0 1 0 5.5 5.5" stroke="#8b8ba0" stroke-width="1.5" fill="none"/><path d="M579.5 58v4h-4" stroke="#8b8ba0" stroke-width="1.5" fill="none"/>
       <g clip-path="url(#vp)">
-        <image href="${img64("gab-d.jpg")}" x="${VX}" y="${VY}" width="${VW}" height="${IMG_H}" preserveAspectRatio="none">${deskScroll}</image>
+        <image href="${img64(desk)}" x="${VX}" y="${VY}" width="${VW}" height="${IMG_H}" preserveAspectRatio="none">${deskScroll}</image>
         <rect x="${VX}" y="${VY}" width="${VW}" height="${VH}" fill="#0a0a0f">
           <animate attributeName="opacity" dur="${T}s" repeatCount="indefinite" values="1;1;0;0;1;1" keyTimes="0;${kt([1.8, 2.3, 23.1, 23.5], T)};1"/>
         </rect>
@@ -490,7 +490,7 @@ function featured() {
       <rect x="${PX - 11}" y="${PY + 60}" width="3" height="26" rx="1.5" fill="#4a4a60"/><rect x="${PX - 11}" y="${PY + 94}" width="3" height="26" rx="1.5" fill="#4a4a60"/>
       <g clip-path="url(#ph)">
         <rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" fill="#0a0a0f"/>
-        <image href="${img64("gab-m.jpg")}" x="${PX}" y="${PY}" width="${PW}" height="${PIMG_H}" preserveAspectRatio="none">${mobScroll}</image>
+        <image href="${img64(mob)}" x="${PX}" y="${PY}" width="${PW}" height="${PIMG_H}" preserveAspectRatio="none">${mobScroll}</image>
         <rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" fill="#0a0a0f">
           <animate attributeName="opacity" dur="${T}s" repeatCount="indefinite" values="1;1;0;0;1;1" keyTimes="0;${kt([2.2, 2.8, 23.1, 23.5], T)};1"/>
         </rect>
@@ -499,7 +499,7 @@ function featured() {
 
       <!-- etiquetas -->
       <g class="legend"><rect x="700" y="40" width="176" height="32" rx="16" fill="#1f1400" stroke="url(#goldG)" stroke-width="1.6"/>
-      <text x="788" y="61" text-anchor="middle" font-family="${MONO}" font-size="12.5" font-weight="700" letter-spacing="3" fill="#fde68a">★ LENDÁRIO</text></g>
+      <text x="788" y="61" text-anchor="middle" font-family="${MONO}" font-size="12.5" font-weight="700" letter-spacing="3" fill="#fde68a">★ ${rank}</text></g>
       <rect x="700" y="84" width="176" height="32" rx="16" fill="#06210f" stroke="#22c55e" stroke-width="1.4"/>
       <circle cx="724" cy="100" r="4.5" fill="#4ade80" class="ping"/><circle cx="724" cy="100" r="4.5" fill="#4ade80" class="live"/>
       <text x="798" y="105" text-anchor="middle" font-family="${MONO}" font-size="12.5" font-weight="700" letter-spacing="2" fill="#86efac">NO AR</text>
@@ -507,7 +507,7 @@ function featured() {
       <text x="${W - 24}" y="540" text-anchor="end" font-family="${MONO}" font-size="11" letter-spacing="2" fill="#a78bfa">CLIQUE PARA VISITAR ↗</text>
     </g>
     <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" stroke="#7f2ccb" stroke-opacity=".6" stroke-width="1.5"/>`;
-  write("featured-gabriela.svg", svg(W, H, body, style, "Gabriela Decorações — site no ar, versão desktop e mobile"));
+  write(file, svg(W, H, body, style, title));
 }
 
 /* ───────────────────────────── CARTAS DE PROJETO ───────────────────────────── */
@@ -774,8 +774,57 @@ navButtons();
 titles();
 terminal();
 achievements();
-featured();
+featured({ file: "featured-gabriela.svg", url: "gabrieladecoracoes.com.br", desk: "gab-d.jpg", deskH: 3080, mob: "gab-m.jpg", mobH: 4464, click: [350, 332],
+  chips: ["React", "TypeScript", "Vite", "Tailwind", "shadcn/ui", "Vercel"], rank: "LENDÁRIO", title: "Gabriela Decorações — site no ar, versão desktop e mobile" });
+featured({ file: "featured-rdl.svg", url: "rdldevelopment.dev", desk: "rdl-d.jpg", deskH: 2916, mob: "rdl-m.jpg", mobH: 4464, click: [245, 324],
+  chips: ["Next.js", "TypeScript", "Tailwind", "Vercel", "SEO", "Web Vitals"], rank: "FUNDADOR", title: "RDL Development — site da startup no ar, versão desktop e mobile" });
+party();
 cards();
 orbit();
 arcade();
 footer();
+
+/* ───────────────────────────── PARTY RDL ───────────────────────────── */
+function party() {
+  const W = 900, H = 262;
+  const members = [
+    ["R", "ROBSON", "P1", "#a855f7", "Full stack · foco em front-end", "React · Next.js · NestJS · Postgres"],
+    ["D", "DANIEL", "P2", "#22d3ee", "Full stack · back-end e segurança", "Node.js · Auth · OWASP"],
+    ["L", "LUIZ", "P3", "#f472b6", "Automação e integrações", "Chatbots · APIs · PHP · React Native"],
+  ];
+  const STEP = 2.4, T = STEP * 3, p = (x) => n((x / T) * 100);
+  const style = `${BASE_STYLE}
+    .sel{opacity:0;animation:sel ${T}s infinite both}
+    @keyframes sel{0%{opacity:0}${p(0.2)}%,${p(STEP - 0.2)}%{opacity:1}${p(STEP)}%,100%{opacity:0}}
+    .ltr{animation:pulse 2.4s ease-in-out infinite}
+    .hex{transform-box:fill-box;transform-origin:center;animation:spin 12s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .ready{animation:blink 1.2s steps(1) infinite}
+    .fill{transform-box:fill-box;transform-origin:left;animation:fill 3s cubic-bezier(.3,.7,.2,1) infinite alternate}
+    @keyframes fill{from{transform:scaleX(.15)}to{transform:scaleX(1)}}`;
+  const cards = members.map(([ch, name, tag, c, cls, stack], i) => {
+    const x = 24 + i * 290, y = 52, w = 272, h = 186, cx = x + 62, cy = y + 74;
+    return `<g>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="#0f0a1c" stroke="#2c1a45" stroke-width="1.5"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" stroke="${c}" stroke-width="2.5" filter="url(#gl)" class="sel" style="animation-delay:${n(i * STEP)}s"/>
+      <rect x="${x + 14}" y="${y + 14}" width="30" height="18" rx="9" fill="${c}"/><text x="${x + 29}" y="${y + 27}" text-anchor="middle" font-family="${MONO}" font-size="10.5" font-weight="700" fill="#0b0614">${tag}</text>
+      <text x="${x + w - 16}" y="${y + 28}" text-anchor="end" font-family="${MONO}" font-size="10" font-weight="700" letter-spacing="2" fill="#4ade80" class="ready" style="animation-delay:${n(i * 0.3)}s">PRONTO</text>
+      <polygon points="${[0, 1, 2, 3, 4, 5].map((k) => `${n(cx + 40 * Math.cos((Math.PI / 3) * k - Math.PI / 2))},${n(cy + 40 * Math.sin((Math.PI / 3) * k - Math.PI / 2))}`).join(" ")}" fill="#160d28" stroke="${c}" stroke-opacity=".5" stroke-width="1.5"/>
+      <circle cx="${cx}" cy="${cy}" r="48" stroke="${c}" stroke-opacity=".6" stroke-dasharray="6 9" class="hex" style="animation-duration:${10 + i * 3}s"/>
+      <text x="${cx}" y="${cy + 17}" text-anchor="middle" font-family="${DISPLAY}" font-weight="900" font-size="46" fill="${c}" filter="url(#glBig)" class="ltr" style="animation-delay:${n(i * 0.8)}s">${ch}</text>
+      <text x="${x + 124}" y="${y + 66}" font-family="${DISPLAY}" font-weight="900" font-size="20" letter-spacing="1.5" fill="#fff">${name}</text>
+      <text x="${x + 124}" y="${y + 86}" font-family="${SANS}" font-size="11.5" fill="#c4b5fd">${esc(cls.split(" · ")[0])}</text>
+      <text x="${x + 124}" y="${y + 101}" font-family="${SANS}" font-size="11.5" fill="#a1a1aa">${esc(cls.split(" · ")[1] || "")}</text>
+      <text x="${x + 16}" y="${y + 146}" font-family="${MONO}" font-size="10.5" fill="#d8b4fe">${esc(stack)}</text>
+      <rect x="${x + 16}" y="${y + 160}" width="${w - 32}" height="6" rx="3" fill="#1f1530"/>
+      <rect x="${x + 16}" y="${y + 160}" width="${w - 32}" height="6" rx="3" fill="${c}" class="fill" style="animation-delay:${n(i * 0.5)}s"/>
+    </g>`;
+  }).join("");
+  const body = `<defs>${GLOW("gl", 4)}${GLOW("glBig", 6)}
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#150828"/><stop offset="1" stop-color="#07030d"/></linearGradient></defs>
+    <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" fill="url(#bg)" stroke="#7f2ccb" stroke-opacity=".6" stroke-width="1.5"/>
+    <text x="26" y="34" font-family="${MONO}" font-size="12" font-weight="700" letter-spacing="3" fill="#e9d5ff">PARTY · <tspan fill="#fff">RDL DEVELOPMENT</tspan></text>
+    <text x="${W - 26}" y="34" text-anchor="end" font-family="${MONO}" font-size="11.5" letter-spacing="2.5" fill="#4ade80">3/3 JOGADORES PRONTOS <tspan class="blink">▶</tspan></text>
+    ${cards}`;
+  write("rdl-party.svg", svg(W, H, body, style, "Party RDL Development: Robson, Daniel e Luiz"));
+}
