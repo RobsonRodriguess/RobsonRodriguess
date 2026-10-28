@@ -11,7 +11,7 @@ on:
   # run on every push on the master branch
   push:
     branches:
-    - master
+    - main
     
   
 
@@ -29,8 +29,8 @@ jobs:
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/github-contribution-grid-snake.svg?color_snake=#7a2bf0&color_dots=#ebedf0,#e4d4ff,#c6a6ff,#a879ff,#7a2bf0
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark&color_snake=#a879ff&color_dots=#161b22,#2a1b45,#4b2a8a,#7a2bf0,#b57cff
           
           
       # push the content of <build_dir> to a branch

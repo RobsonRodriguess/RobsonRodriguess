@@ -1,4 +1,5 @@
-// Gera todos os SVGs animados do README em ../assets
+// Gera os SVGs do README em ../assets, no mesmo tema do portfólio
+// (preto arroxeado, texto lilás claro e violeta da ilustração).
 // uso: node generator/gen.mjs
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -9,822 +10,551 @@ const SRC = join(HERE, "src");
 const OUT = join(HERE, "..", "assets");
 mkdirSync(OUT, { recursive: true });
 
-const SANS = "'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Ubuntu, Arial, sans-serif";
-const MONO = "ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, Menlo, 'DejaVu Sans Mono', monospace";
-const DISPLAY = "'Arial Black', 'Segoe UI Black', 'Helvetica Neue', Impact, sans-serif";
+// Cores do src/app/globals.css do portfólio
+const C = {
+  bg: "#0a0710",
+  surface: "#120d1c",
+  surface2: "#1a1328",
+  ink: "#f2eefa",
+  muted: "#a097b4",
+  line: "rgba(255,255,255,0.08)",
+  lineStrong: "rgba(255,255,255,0.15)",
+  accent: "#a879ff",
+  v1: "#b57cff",
+  v2: "#7a2bf0",
+};
+
+const SANS = "G, 'Segoe UI', system-ui, -apple-system, sans-serif";
+const MONO = "GM, ui-monospace, 'Cascadia Code', Consolas, monospace";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const img64 = (f, mime = "image/jpeg") => `data:${mime};base64,${readFileSync(join(SRC, f)).toString("base64")}`;
-const icon64 = (name) => img64(join("icons", `${name}.svg`), "image/svg+xml");
+const b64 = (f, mime) => `data:${mime};base64,${readFileSync(join(SRC, f)).toString("base64")}`;
+const webp = (f) => b64(f, "image/webp");
 const n = (v) => Math.round(v * 100) / 100;
-const kt = (times, T) => times.map((t) => (Math.min(Math.max(t / T, 0), 1)).toFixed(5)).join(";");
 
-function rng(seed) {
-  return () => {
-    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+function webpSize(f) {
+  const b = readFileSync(join(SRC, f));
+  const t = b.toString("latin1", 12, 16);
+  if (t === "VP8X") return [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)];
+  if (t === "VP8 ") return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff];
+  const v = b.readUInt32LE(21);
+  return [(v & 0x3fff) + 1, ((v >> 14) & 0x3fff) + 1];
 }
 
-const svg = (w, h, body, style = "", title = "") =>
+// Geist e Geist Mono embutidas (OFL), só nos SVGs que usam cada uma.
+const FONT = {
+  sans: `@font-face{font-family:G;font-weight:100 900;src:url(${b64("fonts/geist.woff2", "font/woff2")}) format("woff2")}`,
+  mono: `@font-face{font-family:GM;font-weight:100 900;src:url(${b64("fonts/geist-mono.woff2", "font/woff2")}) format("woff2")}`,
+};
+
+const BASE_CSS = `
+  .s{font-family:${SANS}}
+  .m{font-family:${MONO}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+`;
+
+const svg = (w, h, body, { title = "", css = "", mono = true } = {}) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" role="img">` +
   (title ? `<title>${esc(title)}</title>` : "") +
-  (style ? `<style>${style.replace(/\s*\n\s*/g, "")}</style>` : "") + body + `</svg>`;
+  `<style>${FONT.sans}${mono ? FONT.mono : ""}${(BASE_CSS + css).replace(/\s*\n\s*/g, "")}</style>` +
+  body +
+  `</svg>`;
 
 function write(name, content) {
   writeFileSync(join(OUT, name), content);
-  console.log(`${name.padEnd(28)} ${(Buffer.byteLength(content) / 1024).toFixed(1)} KB`);
+  console.log(`${name.padEnd(26)} ${(Buffer.byteLength(content) / 1024).toFixed(1)} KB`);
 }
 
-const GLOW = (id, std, extra = "") =>
-  `<filter id="${id}" x="-50%" y="-50%" width="200%" height="200%"${extra}><feGaussianBlur stdDeviation="${std}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-
-function stars(rand, count, w, maxY, color = "#fff") {
-  let s = "";
-  for (let i = 0; i < count; i++) {
-    const d = n(2 + rand() * 4);
-    s += `<circle cx="${n(rand() * w)}" cy="${n(rand() * maxY)}" r="${n(0.4 + rand() * 1.3)}" fill="${color}" style="animation:tw ${d}s ease-in-out ${n(-rand() * d)}s infinite"/>`;
+// Largura aproximada de texto em Geist, para quebrar linhas sem medir de verdade.
+function textWidth(s, size) {
+  let w = 0;
+  for (const ch of s) {
+    if (" ilj.,:;'|!".includes(ch)) w += 0.27;
+    else if ("ftr()[]".includes(ch)) w += 0.36;
+    else if ("mwMW".includes(ch)) w += 0.82;
+    else if (ch >= "A" && ch <= "Z") w += 0.66;
+    else w += 0.55;
   }
-  return s;
+  return w * size;
 }
 
-// chão synthwave: linhas que fogem para o horizonte
-function grid({ id, w, top, bottom, vx, spacing = 64, lines = 9, dur = 3.4, color = "#e879f9" }) {
-  let v = "";
-  for (let k = -18; k <= 18; k++) {
-    v += `<line x1="${n(vx + k * 7)}" y1="${top}" x2="${n(vx + k * spacing * 1.6)}" y2="${bottom + 40}" stroke="${color}" stroke-opacity=".55" stroke-width="1.1"/>`;
+function wrap(text, max, size) {
+  const lines = [];
+  let cur = "";
+  for (const word of text.split(" ")) {
+    const next = cur ? `${cur} ${word}` : word;
+    if (cur && textWidth(next, size) > max) {
+      lines.push(cur);
+      cur = word;
+    } else cur = next;
   }
-  let h = "";
-  for (let i = 0; i < lines; i++) {
-    h += `<line x1="0" x2="${w}" y1="${top}" y2="${top}" stroke="${color}" stroke-width="1.4" class="gl-${id}" style="animation-delay:${n((-i * dur) / lines)}s"/>`;
-  }
-  const style = `.gl-${id}{animation:gl-${id} ${dur}s cubic-bezier(.55,0,1,.45) infinite}
-    @keyframes gl-${id}{0%{transform:translateY(0);opacity:0}12%{opacity:.85}100%{transform:translateY(${bottom - top}px);opacity:1}}`;
-  const body = `<clipPath id="floor-${id}"><rect x="0" y="${top}" width="${w}" height="${bottom - top}"/></clipPath>
-    <g clip-path="url(#floor-${id})">${v}${h}</g>`;
-  return { style, body };
+  if (cur) lines.push(cur);
+  return lines;
 }
 
-const BASE_STYLE = `@keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}
-  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-  @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-  .blink{animation:blink 1.1s steps(1) infinite}`;
+const lines = (arr, x, y, lh, attrs) =>
+  arr.map((l, i) => `<text x="${x}" y="${n(y + i * lh)}" ${attrs}>${esc(l)}</text>`).join("");
 
-/* ───────────────────────────── HERO ───────────────────────────── */
+// Monograma RR, igual ao src/components/Logo.tsx
+function logo(id, x, y, size) {
+  const k = size / 64;
+  return (
+    `<defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.v1}"/><stop offset="1" stop-color="${C.v2}"/></linearGradient>` +
+    `<linearGradient id="${id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>` +
+    `<g transform="translate(${x} ${y}) scale(${n(k)})"><rect width="64" height="64" rx="17" fill="url(#${id}g)"/><rect width="64" height="64" rx="17" fill="url(#${id}h)"/>` +
+    `<g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 46V19h9.5a7.5 7.5 0 0 1 0 15H15M23.5 34 31 46"/><path d="M31 46V19h9.5a7.5 7.5 0 0 1 0 15H31M39.5 34 47 46"/></g></g>`
+  );
+}
+
+// Degradês de título: .title-grad e o violeta do hero
+const GRADS = `
+  <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9bce6"/></linearGradient>
+  <linearGradient id="vg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9c2ff"/><stop offset=".45" stop-color="${C.v1}"/><stop offset="1" stop-color="#8f4dff"/></linearGradient>
+  <radialGradient id="au1"><stop offset="0" stop-color="rgb(122,43,240)" stop-opacity=".35"/><stop offset="1" stop-color="rgb(122,43,240)" stop-opacity="0"/></radialGradient>
+  <radialGradient id="au2"><stop offset="0" stop-color="rgb(181,124,255)" stop-opacity=".22"/><stop offset="1" stop-color="rgb(181,124,255)" stop-opacity="0"/></radialGradient>
+`;
+
+const AURORA_CSS = `
+  .au{animation:au 18s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+  .au2{animation-delay:-9s}
+  @keyframes au{0%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,30px) scale(1.08)}100%{transform:translate(-30px,10px) scale(.96)}}
+`;
+
+const ARROW_UR = (x, y, s = 1, color = C.ink) =>
+  `<g transform="translate(${x} ${y}) scale(${s})" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 11 11 1M3.5 1H11v7.5"/></g>`;
+
+// ───────────────────────────── Hero ─────────────────────────────
 function hero() {
-  const W = 900, H = 440, HZ = 292, CX = 450;
-  const rand = rng(42);
-  const g = grid({ id: "h", w: W, top: HZ, bottom: H, vx: CX });
+  const W = 1200, H = 640;
+  const [aw, ah] = webpSize("avatar-560.webp");
+  const avW = 410, avH = n((avW * ah) / aw);
+  const card = { x: 720, y: 130, w: 420, h: 440 };
+  const avY = card.y + card.h - avH;
 
-  const mountain = (x0, x1, peak, seed, fill, stroke) => {
-    const r = rng(seed);
-    let pts = `${x0},${HZ} `;
-    const steps = 9;
-    for (let i = 1; i < steps; i++) {
-      const x = x0 + ((x1 - x0) * i) / steps;
-      const mid = 1 - Math.abs(i / steps - 0.5) * 2;
-      pts += `${n(x)},${n(HZ - 8 - mid * peak * (0.55 + r() * 0.45))} `;
-    }
-    pts += `${x1},${HZ}`;
-    return `<polygon points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="1.4" stroke-linejoin="round"/>`;
-  };
-
-  const taglines = [
-    "NEXT.JS · REACT · TYPESCRIPT · NODE.JS · POSTGRESQL",
-    "SITES E SISTEMAS QUE RODAM NO MUNDO REAL",
-    "ADS — IFG  ·  BRASÍLIA-DF  ·  ABERTO A PROJETOS",
+  const code = [
+    [["k", "const "], ["v", "robson"], ["p", " = {"]],
+    [["p", "  role: "], ["s", '"front-end"'], ["p", ","]],
+    [["p", "  base: "], ["s", '"Brasília, BR"'], ["p", ","]],
+    [["p", "  langs: "], ["s", '["EN", "PT"]'], ["p", ","]],
+    [["p", "  status: "], ["s", '"available"'], ["p", ","]],
+    [["p", "};"]],
   ];
+  const term = { x: 580, y: 420, w: 360, h: 200 };
+  const T = 9; // ciclo da digitação, em segundos
+  let codeSvg = "";
+  code.forEach((parts, i) => {
+    const y = term.y + 74 + i * 22;
+    const text = parts.map(([k, t]) => `<tspan class="c${k}">${esc(t)}</tspan>`).join("");
+    const len = parts.reduce((a, [, t]) => a + t.length, 0);
+    const w = len * 8.4 + 4;
+    const s = (0.4 + i * 0.75) / T, e = Math.min((0.4 + i * 0.75 + len * 0.035) / T, 0.95);
+    codeSvg +=
+      `<clipPath id="cl${i}"><rect x="${term.x + 20}" y="${y - 15}" height="20" width="0"><animate attributeName="width" values="0;0;${n(w)};${n(w)};0" keyTimes="0;${n(s)};${n(e)};0.96;1" dur="${T}s" repeatCount="indefinite"/></rect></clipPath>` +
+      `<text x="${term.x + 20}" y="${y}" class="m" font-size="14" xml:space="preserve" clip-path="url(#cl${i})">${text}</text>`;
+  });
 
-  const style = `${BASE_STYLE}${g.style}
-    .name{animation:nm 6s infinite;transform-box:fill-box;transform-origin:center}
-    @keyframes nm{0%,86%,90%,100%{transform:none}87%{transform:translateX(4px) skewX(-10deg)}88%{transform:translateX(-3px) skewX(6deg)}89%{transform:none}}
-    .gA{animation:gA 6s infinite;mix-blend-mode:screen}.gB{animation:gB 6s infinite;mix-blend-mode:screen}
-    @keyframes gA{0%,86%,92%,100%{opacity:0;transform:none}87%{opacity:.9;transform:translate(-6px,-2px)}89%{opacity:.8;transform:translate(5px,1px)}91%{opacity:.6;transform:translate(-2px,0)}}
-    @keyframes gB{0%,86%,92%,100%{opacity:0;transform:none}87%{opacity:.9;transform:translate(6px,2px)}89%{opacity:.8;transform:translate(-5px,-1px)}91%{opacity:.6;transform:translate(3px,0)}}
-    .halo{animation:pulse 3s ease-in-out infinite}
-    .sub{animation:fl 5s infinite}
-    @keyframes fl{0%,18%,21%,24%,60%,63%,100%{opacity:1}19%,22%,61%{opacity:.25}}
-    .tag{opacity:0;animation:tag 12s infinite;transform-box:fill-box}
-    @keyframes tag{0%{opacity:0;transform:translateY(6px)}5%,28%{opacity:1;transform:none}33%,100%{opacity:0;transform:translateY(-6px)}}
-    .sun{animation:sun 4s ease-in-out infinite}
-    @keyframes sun{0%,100%{opacity:.75}50%{opacity:1}}
-    .scanband{animation:band 7s linear infinite}
-    @keyframes band{0%{transform:translateY(-90px)}100%{transform:translateY(${H + 90}px)}}
-    .shoot{animation:shoot 9s ease-in 2s infinite;opacity:0}
-    @keyframes shoot{0%{opacity:0;transform:translate(0,0)}2%{opacity:1}9%{opacity:0;transform:translate(-260px,120px)}100%{opacity:0;transform:translate(-260px,120px)}}
-    .start{animation:blink 1.2s steps(1) infinite}
-    .arrow{animation:bob 1.4s ease-in-out infinite}
-    .pwbg{animation:pwbg 1.4s ease forwards}
-    @keyframes pwbg{0%,40%{opacity:1}100%{opacity:0}}
-    .pwl{transform-box:fill-box;transform-origin:center;animation:pwl 1.4s ease forwards}
-    @keyframes pwl{0%{transform:scale(0,1);opacity:1}30%{transform:scale(1,1);opacity:1}55%{transform:scale(1,60);opacity:0}100%{opacity:0}}`;
-
-  const nameAttrs = `x="${CX}" y="124" text-anchor="middle" font-family="${DISPLAY}" font-weight="900" font-size="60" textLength="730" lengthAdjust="spacingAndGlyphs"`;
-
-  const body = `<defs>
-    <clipPath id="frame"><rect width="${W}" height="${H}" rx="20"/></clipPath>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04010b"/><stop offset=".55" stop-color="#16052c"/><stop offset=".66" stop-color="#3a0b5c"/><stop offset=".665" stop-color="#0c0218"/><stop offset="1" stop-color="#000"/></linearGradient>
-    <linearGradient id="sunG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".45" stop-color="#fb923c"/><stop offset="1" stop-color="#db2777"/></linearGradient>
-    <linearGradient id="chrome" gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="0" y2="126"><stop offset="0" stop-color="#a5f3fc"/><stop offset=".5" stop-color="#ffffff"/><stop offset=".52" stop-color="#5b21b6"/><stop offset=".68" stop-color="#c026d3"/><stop offset="1" stop-color="#fbcfe8"/></linearGradient>
-    <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient>
-    <linearGradient id="bandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-    <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000" opacity=".28"/></pattern>
-    <mask id="sunMask"><rect x="0" y="0" width="${W}" height="${HZ}" fill="#fff"/>${[254, 264, 273, 281, 288].map((y, i) => `<rect x="300" y="${y}" width="300" height="${2 + i * 1.3}" fill="#000"/>`).join("")}</mask>
-    ${GLOW("glow", 3)}${GLOW("glowBig", 9)}${GLOW("glowSun", 18)}
+  const body = `
+  <defs>${GRADS}
+    <clipPath id="frame"><rect width="${W}" height="${H}" rx="28"/></clipPath>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.v1}"/><stop offset="1" stop-color="${C.v2}"/></linearGradient>
+    <linearGradient id="cardHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.bg}" stop-opacity="0"/><stop offset="1" stop-color="${C.bg}" stop-opacity=".55"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="${C.v2}" stop-opacity=".55"/><stop offset="1" stop-color="${C.v2}" stop-opacity="0"/></radialGradient>
+    <clipPath id="avClip"><path d="M${card.x - 40} 0H${W}V${card.y + card.h - 32}a32 32 0 0 1-32 32H${card.x + 32}a32 32 0 0 1-32-32V${card.y + 40}H${card.x - 40}Z"/></clipPath>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".55"/></filter>
   </defs>
   <g clip-path="url(#frame)">
-    <rect width="${W}" height="${H}" fill="url(#sky)"/>
-    ${stars(rand, 95, W, HZ - 20)}
-    <g class="shoot"><line x1="780" y1="40" x2="840" y2="12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g>
-    <g class="sun"><circle cx="${CX}" cy="${HZ + 26}" r="118" fill="url(#sunG)" filter="url(#glowSun)" mask="url(#sunMask)" opacity=".55"/></g>
-    <circle cx="${CX}" cy="${HZ + 26}" r="112" fill="url(#sunG)" mask="url(#sunMask)"/>
-    ${mountain(-20, 360, 70, 3, "#1d0638", "#7e22ce")}
-    ${mountain(540, 920, 76, 9, "#1d0638", "#7e22ce")}
-    ${mountain(-40, 250, 44, 5, "#0f0220", "#c026d3")}
-    ${mountain(650, 940, 50, 11, "#0f0220", "#c026d3")}
-    <rect x="0" y="${HZ}" width="${W}" height="${H - HZ}" fill="#08010f"/>
-    ${g.body}
-    <line x1="0" x2="${W}" y1="${HZ}" y2="${HZ}" stroke="#f0abfc" stroke-width="2" filter="url(#glow)"/>
+    <rect width="${W}" height="${H}" fill="${C.bg}"/>
+    <circle class="au" cx="160" cy="40" r="360" fill="url(#au1)"/>
+    <circle class="au au2" cx="1040" cy="200" r="320" fill="url(#au2)"/>
 
-    <g font-family="${MONO}" font-size="13" letter-spacing="2" font-weight="700">
-      <text x="28" y="34" fill="#ff2e97" class="blink">1UP</text><text x="70" y="34" fill="#fff">ROBSON</text>
-      <text x="${CX}" y="34" fill="#ff2e97" text-anchor="middle">HI-SCORE <tspan fill="#fff">∞</tspan></text>
-      <text x="${W - 28}" y="34" fill="#22d3ee" text-anchor="end">CREDIT <tspan fill="#fff">01</tspan></text>
+    <!-- barra de navegação -->
+    <rect x="24" y="22" width="${W - 48}" height="64" rx="20" fill="rgba(18,13,28,0.6)" stroke="${C.line}"/>
+    ${logo("lg", 40, 36, 36)}
+    <text x="88" y="61" class="s" font-size="18" font-weight="600" fill="${C.ink}" letter-spacing="-0.2">Robson Rodrigues</text>
+    <rect x="${W - 268}" y="36" width="228" height="36" rx="18" fill="${C.surface2}" stroke="${C.line}"/>
+    <circle cx="${W - 246}" cy="54" r="5" fill="#4ade80"/>
+    <circle class="pulse" cx="${W - 246}" cy="54" r="5" fill="#4ade80"/>
+    <text x="${W - 232}" y="59.5" class="s" font-size="15" font-weight="500" fill="${C.ink}">Available for new projects</text>
+
+    <!-- título -->
+    <g class="s" font-size="72" font-weight="600" letter-spacing="-3.2">
+      <text x="48" y="232" fill="url(#tg)">Websites and</text>
+      <text x="48" y="308"><tspan fill="url(#tg)">products </tspan><tspan fill="url(#vg)">that</tspan></text>
+      <text x="48" y="384" fill="url(#vg)">sell for you.</text>
+    </g>
+    ${lines(
+      ["I'm Robson Rodrigues, a front-end developer", "from Brazil. I build fast, accessible,", "great-looking interfaces for clients", "around the world."],
+      50, 444, 31, `class="s" font-size="21" fill="${C.muted}"`,
+    )}
+
+    <!-- palco do avatar -->
+    <circle cx="${card.x + card.w / 2}" cy="${card.y + card.h / 2}" r="330" fill="url(#glow)"/>
+    <rect x="${card.x}" y="${card.y}" width="${card.w}" height="${card.h}" rx="32" fill="url(#card)"/>
+    <rect x="${card.x}" y="${card.y}" width="${card.w}" height="${card.h}" rx="32" fill="url(#cardHi)"/>
+    <text x="${card.x + card.w / 2}" y="${card.y + 120}" text-anchor="middle" class="s" font-size="118" font-weight="800" letter-spacing="-6" fill="#fff" fill-opacity=".16">&lt;/&gt;</text>
+    <g clip-path="url(#avClip)">
+      <image href="${webp("avatar-560.webp")}" x="${card.x + 10}" y="${n(avY)}" width="${avW}" height="${avH}"/>
+      <rect x="${card.x}" y="${card.y + card.h - 140}" width="${card.w}" height="140" fill="url(#fade)"/>
     </g>
 
-    <text ${nameAttrs} fill="#c026d3" filter="url(#glowBig)" class="halo">ROBSON RODRIGUES</text>
-    <text ${nameAttrs} fill="#22d3ee" class="gA">ROBSON RODRIGUES</text>
-    <text ${nameAttrs} fill="#ff2e97" class="gB">ROBSON RODRIGUES</text>
-    <text ${nameAttrs} fill="url(#chrome)" stroke="#fff" stroke-opacity=".35" stroke-width=".8" class="name">ROBSON RODRIGUES</text>
-
-    <text x="${CX}" y="164" text-anchor="middle" font-family="${SANS}" font-weight="700" font-size="19" letter-spacing="9" fill="#67e8f9" filter="url(#glow)" class="sub" textLength="470" lengthAdjust="spacing">FULL STACK DEVELOPER</text>
-    <g font-family="${MONO}" font-size="13" letter-spacing="2" fill="#f5d0fe" text-anchor="middle">
-      ${taglines.map((t, i) => `<text x="${CX}" y="196" class="tag" style="animation-delay:${i * 4}s">${esc(t)}</text>`).join("")}
+    <!-- selo "Coding..." -->
+    <g transform="translate(${card.x + card.w - 64} ${card.y + 104})">
+      <rect width="128" height="38" rx="19" fill="rgba(10,7,16,0.85)" stroke="${C.lineStrong}"/>
+      <rect class="bar b1" x="16" y="13" width="3" height="14" rx="1.5" fill="${C.accent}"/>
+      <rect class="bar b2" x="22" y="13" width="3" height="14" rx="1.5" fill="${C.accent}"/>
+      <rect class="bar b3" x="28" y="13" width="3" height="14" rx="1.5" fill="${C.accent}"/>
+      <text x="40" y="24.5" class="s" font-size="14" font-weight="600" fill="${C.ink}">Coding...</text>
     </g>
 
-    <g font-family="${MONO}" font-weight="700" text-anchor="middle">
-      <text x="${CX}" y="398" font-size="17" letter-spacing="7" fill="#fde047" filter="url(#glow)" class="start">PRESS START</text>
-      <text x="${CX}" y="422" font-size="10" letter-spacing="4" fill="#f0abfc" class="arrow">▼ ROLE PARA JOGAR ▼</text>
+    <!-- terminal -->
+    <g filter="url(#sh)">
+      <rect x="${term.x}" y="${term.y}" width="${term.w}" height="${term.h}" rx="16" fill="#151020" fill-opacity=".96" stroke="${C.lineStrong}"/>
     </g>
-
-    <rect width="${W}" height="${H}" fill="url(#scan)"/>
-    <rect width="${W}" height="90" fill="url(#bandG)" class="scanband"/>
-    <rect width="${W}" height="${H}" fill="url(#vig)"/>
-    <rect class="pwbg" width="${W}" height="${H}" fill="#000"/>
-    <rect class="pwl" x="0" y="${H / 2 - 1}" width="${W}" height="2" fill="#fff"/>
+    <line x1="${term.x}" x2="${term.x + term.w}" y1="${term.y + 40}" y2="${term.y + 40}" stroke="${C.line}"/>
+    <circle cx="${term.x + 20}" cy="${term.y + 20}" r="5.5" fill="#ff5f57"/>
+    <circle cx="${term.x + 38}" cy="${term.y + 20}" r="5.5" fill="#febc2e"/>
+    <circle cx="${term.x + 56}" cy="${term.y + 20}" r="5.5" fill="#28c840"/>
+    <text x="${term.x + 76}" y="${term.y + 25}" class="m" font-size="13" fill="${C.muted}">robson.ts</text>
+    ${codeSvg}
   </g>
-  <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" stroke="#7f2ccb" stroke-opacity=".7" stroke-width="1.5"/>`;
-  write("hero.svg", svg(W, H, body, style, "Robson Rodrigues — Full Stack Developer"));
+  <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="27.5" stroke="${C.line}"/>`;
+
+  const css = `
+    ${AURORA_CSS}
+    .ck{fill:${C.accent}} .cv{fill:${C.ink}} .cp{fill:${C.muted}} .cs{fill:#e5c3ff}
+    .pulse{animation:pulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+    @keyframes pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(3);opacity:0}}
+    .bar{animation:bar 1s ease-in-out infinite;transform-box:fill-box;transform-origin:bottom}
+    .b2{animation-delay:-.33s} .b3{animation-delay:-.66s}
+    @keyframes bar{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+  `;
+  write("hero.svg", svg(W, H, body, { title: "Robson Rodrigues — Websites and products that sell for you.", css }));
 }
 
-/* ───────────────────────────── NAV ───────────────────────────── */
-function navButtons() {
-  const items = [["01", "SOBRE"], ["02", "STARTUP"], ["03", "PROJETOS"], ["04", "ARSENAL"], ["05", "PLACAR"], ["06", "CONTATO"]];
-  items.forEach(([num, label], i) => {
-    const W = 164, H = 46;
-    const style = `${BASE_STYLE}
-      .run{stroke-dasharray:16 84;animation:run 3.2s linear infinite;animation-delay:${n(-i * 0.64)}s}
-      @keyframes run{to{stroke-dashoffset:-100}}
-      .arr{animation:nudge 1.2s ease-in-out infinite;animation-delay:${n(i * 0.15)}s}
-      @keyframes nudge{0%,100%{transform:translateX(0);opacity:.5}50%{transform:translateX(3px);opacity:1}}`;
-    const body = `<defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#ff2e97"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>${GLOW("gl", 2)}</defs>
-      <rect x="1.5" y="1.5" width="${W - 3}" height="${H - 3}" rx="11" fill="#0d0618" stroke="#3b1764" stroke-width="1.5"/>
-      <rect x="1.5" y="1.5" width="${W - 3}" height="${H - 3}" rx="11" pathLength="100" stroke="url(#lg)" stroke-width="2.2" stroke-linecap="round" class="run" filter="url(#gl)"/>
-      <text x="18" y="28" font-family="${MONO}" font-size="11" font-weight="700" fill="#ff2e97">${num}</text>
-      <text x="44" y="28.5" font-family="${MONO}" font-size="14" font-weight="700" letter-spacing="2" fill="#f5f3ff">${label}</text>
-      <text x="${W - 18}" y="28" font-family="${MONO}" font-size="11" fill="#22d3ee" text-anchor="end" class="arr">▶</text>`;
-    write(`nav-${label.toLowerCase()}.svg`, svg(W, H, body, style, label));
-  });
+// ───────────────────────────── Botões ─────────────────────────────
+function button(name, label, { primary = false } = {}) {
+  const H = 56, fs = 18;
+  const w = Math.round(textWidth(label, fs) * 1.08 + 76);
+  const fg = primary ? C.bg : C.ink;
+  const ic = ARROW_UR(w - 36, 22, 1, fg);
+  const body = `
+    <defs><linearGradient id="bh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e4dcf5"/></linearGradient></defs>
+    <rect x="1" y="1" width="${w - 2}" height="${H - 2}" rx="${(H - 2) / 2}" fill="${primary ? "url(#bh)" : C.surface}" stroke="${primary ? "#cbbcf0" : C.lineStrong}"/>
+    <text x="24" y="34.5" class="s" font-size="${fs}" font-weight="600" fill="${fg}">${esc(label)}</text>
+    ${ic}`;
+  write(`btn-${name}.svg`, svg(w, H, body, { title: label, mono: false }));
 }
 
-/* ───────────────────────────── TÍTULOS ───────────────────────────── */
-function titles() {
-  const list = [
-    ["sobre", "01", "SOBRE MIM", "PLAYER 1 · STATUS"],
-    ["startup", "02", "MINHA STARTUP", "GUILDA RDL DEVELOPMENT"],
-    ["destaque", "03", "PROJETO LENDÁRIO", "MISSÃO PRINCIPAL"],
-    ["colecao", "04", "COLEÇÃO DE PROJETOS", "CARTAS DESBLOQUEADAS"],
-    ["arsenal", "05", "ARSENAL", "SISTEMA ORBITAL DE STACK"],
-    ["placar", "06", "PLACAR", "DADOS AO VIVO DO GITHUB"],
-    ["contato", "07", "MULTIPLAYER", "CHAMA PRO CO-OP"],
-  ];
-  list.forEach(([id, num, text, sub], i) => {
-    const W = 900, H = 66;
-    const style = `${BASE_STYLE}
-      .t{animation:fl 7s infinite;animation-delay:${i * 0.9}s}
-      @keyframes fl{0%,40%,43%,46%,100%{opacity:1}41%,44%{opacity:.35}}
-      .dot{animation:sweep 4.5s cubic-bezier(.6,0,.4,1) infinite;animation-delay:${n(i * 0.4)}s}
-      @keyframes sweep{0%{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(840px);opacity:0}}`;
-    const body = `<defs>
-        <clipPath id="c"><rect width="${W}" height="${H}" rx="14"/></clipPath>
-        <linearGradient id="acc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff2e97"/><stop offset="1" stop-color="#7f2ccb"/></linearGradient>
-        <linearGradient id="bg" x1="0" x2="1"><stop offset="0" stop-color="#1a0a2e"/><stop offset=".6" stop-color="#0c0616"/><stop offset="1" stop-color="#0c0616"/></linearGradient>
-        <radialGradient id="dg"><stop offset="0" stop-color="#f0abfc"/><stop offset="1" stop-color="#f0abfc" stop-opacity="0"/></radialGradient>
-        ${GLOW("gl", 4)}
-      </defs>
-      <g clip-path="url(#c)">
-        <rect width="${W}" height="${H}" fill="url(#bg)"/>
-        <rect width="6" height="${H}" fill="url(#acc)"/>
-        <line x1="24" x2="${W - 24}" y1="56" y2="56" stroke="#2c1450" stroke-width="1"/>
-        <g class="dot"><ellipse cx="30" cy="56" rx="38" ry="2.4" fill="url(#dg)"/></g>
-      </g>
-      <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="13.5" stroke="#2c1450"/>
-      <text x="26" y="40" font-family="${MONO}" font-size="14" font-weight="700" fill="#ff2e97">${num} //</text>
-      <text x="86" y="42" font-family="${DISPLAY}" font-weight="900" font-size="25" letter-spacing="2" fill="#fff" filter="url(#gl)" class="t">${esc(text)}</text>
-      <text x="${W - 26}" y="39" font-family="${MONO}" font-size="11.5" letter-spacing="2.5" fill="#a78bfa" text-anchor="end">${esc(sub)} <tspan fill="#22d3ee" class="blink">█</tspan></text>`;
-    write(`title-${id}.svg`, svg(W, H, body, style, text));
-  });
-}
-
-/* ───────────────────────────── TERMINAL ───────────────────────────── */
-function terminal() {
-  const W = 900, H = 372, FS = 15, CW = 9, LH = 25, X0 = 28, Y0 = 80, CMDX = X0 + 5 * CW;
-  const CHAR = 0.055;
-  const lines = [
-    { cmd: "whoami" },
-    { out: [["Robson Rodrigues", "#ffffff", 700], [" · Full Stack Developer · Brasília-DF", "#c4b5fd"]] },
-    { cmd: "cat sobre.txt" },
-    { out: [["Crio produtos digitais completos: do front-end animado ao", "#d4d4d8"]] },
-    { out: [["back-end seguro, com pagamentos, autenticação e painel admin.", "#d4d4d8"]] },
-    { out: [["Gosto de projeto que sai do papel e ", "#d4d4d8"], ["vai pro ar.", "#f0abfc", 700]] },
-    { cmd: "ls conquistas/" },
-    { out: [["ads-ifg.diploma", "#22d3ee"], ["   clientes-reais/", "#a78bfa"], ["   deploys-em-producao/", "#a78bfa"], ["   5+anos-de-xp", "#fde047"]] },
-    { cmd: "echo $STATUS" },
-    { out: [["● ", "#4ade80"], ["aberto a projetos remotos e freelas", "#4ade80"]] },
-    { prompt: true },
-  ];
-
-  // linha do tempo
-  let t = 0.6;
-  const cursor = []; // [time, x, y]
-  lines.forEach((l, i) => {
-    l.y = Y0 + i * LH;
-    if (l.cmd) {
-      t += 0.5;
-      l.start = t;
-      cursor.push([t, CMDX, l.y]);
-      for (let k = 1; k <= l.cmd.length; k++) cursor.push([t + k * CHAR, CMDX + k * CW, l.y]);
-      t += l.cmd.length * CHAR + 0.35;
-    } else if (l.out) {
-      l.start = t;
-      t += 0.12;
-      if (!lines[i + 1] || !lines[i + 1].out) t += 0.9;
-    } else {
-      t += 0.3;
-      l.start = t;
-      cursor.push([t, CMDX, l.y]);
-    }
-  });
-  const T = n(t + 5.5);
-  const fadeA = T - 0.9, fadeB = T - 0.35;
-  const show = (start) => `<animate attributeName="opacity" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="0;1" keyTimes="0;${kt([start], T)}"/>`;
-  const prompt = (y) => `<text x="${X0}" y="${y}"><tspan fill="#ff2e97">➜</tspan><tspan fill="#22d3ee" dx="9">~</tspan></text>`;
-
-  let content = "";
-  let clips = "";
-  lines.forEach((l, i) => {
-    if (l.cmd) {
-      const times = [0, l.start], vals = [0, 0];
-      for (let k = 1; k <= l.cmd.length; k++) { times.push(l.start + k * CHAR); vals.push(k * CW); }
-      clips += `<clipPath id="ty${i}"><rect x="${CMDX - 1}" y="${l.y - FS}" height="${FS + 8}" width="0"><animate attributeName="width" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="${vals.join(";")}" keyTimes="${kt(times, T)}"/></rect></clipPath>`;
-      content += `<g opacity="0">${show(l.start)}${prompt(l.y)}</g>`;
-      content += `<text x="${CMDX}" y="${l.y}" fill="#f5f3ff" clip-path="url(#ty${i})" textLength="${l.cmd.length * CW}" lengthAdjust="spacingAndGlyphs">${esc(l.cmd)}</text>`;
-    } else if (l.out) {
-      content += `<g opacity="0">${show(l.start)}<text x="${X0}" y="${l.y}">${l.out.map(([s, c, w]) => `<tspan fill="${c}"${w ? ` font-weight="${w}"` : ""}>${esc(s).replace(/ {2,}/g, (m) => " ".repeat(m.length))}</tspan>`).join("")}</text></g>`;
-    } else {
-      content += `<g opacity="0">${show(l.start)}${prompt(l.y)}</g>`;
-    }
-  });
-
-  const ct = cursor.map((c) => c[0]);
-  const cursorEl = `<g class="blink"><rect width="${CW}" height="${FS + 3}" fill="#f0abfc" opacity=".85" x="${CMDX}" y="${Y0 - FS + 1}">
-      <animate attributeName="x" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="${[CMDX, ...cursor.map((c) => c[1])].join(";")}" keyTimes="${kt([0, ...ct], T)}"/>
-      <animate attributeName="y" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="${[Y0, ...cursor.map((c) => c[2])].map((y) => y - FS + 1).join(";")}" keyTimes="${kt([0, ...ct], T)}"/>
-    </rect></g>`;
-
-  const style = `${BASE_STYLE}`;
-  const body = `<defs>
-      <clipPath id="win"><rect width="${W}" height="${H}" rx="14"/></clipPath>
-      <linearGradient id="bar" x1="0" x2="1"><stop offset="0" stop-color="#1d1030"/><stop offset="1" stop-color="#140b22"/></linearGradient>
-      <radialGradient id="glowbg" cx=".85" cy="0" r="1"><stop offset="0" stop-color="#7f2ccb" stop-opacity=".22"/><stop offset=".6" stop-color="#7f2ccb" stop-opacity="0"/></radialGradient>
-      <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000" opacity=".22"/></pattern>
-      ${clips}
-    </defs>
-    <g clip-path="url(#win)">
-      <rect width="${W}" height="${H}" fill="#0b0814"/>
-      <rect width="${W}" height="${H}" fill="url(#glowbg)"/>
-      <rect width="${W}" height="38" fill="url(#bar)"/>
-      <line x1="0" x2="${W}" y1="38" y2="38" stroke="#2c1a45"/>
-      <circle cx="22" cy="19" r="6" fill="#ff5f57"/><circle cx="42" cy="19" r="6" fill="#febc2e"/><circle cx="62" cy="19" r="6" fill="#28c840"/>
-      <text x="${W / 2}" y="23.5" text-anchor="middle" font-family="${MONO}" font-size="12" fill="#8b80a8">robson@brasilia: ~/sobre-mim — zsh</text>
-      <g font-family="${MONO}" font-size="${FS}" xml:space="preserve" style="white-space:pre">
-        <g>${content}${cursorEl}
-          <animate attributeName="opacity" dur="${T}s" repeatCount="indefinite" values="1;1;0;0" keyTimes="0;${kt([fadeA, fadeB], T)};1"/>
-        </g>
-      </g>
-      <rect width="${W}" height="${H}" fill="url(#scan)"/>
+// ───────────────────────────── Títulos de seção ─────────────────────────────
+function sectionTitle(name, num, label, title, text) {
+  const W = 1200;
+  // Fundo escuro próprio para não sumir no tema claro do GitHub.
+  const t = text ? wrap(text, 1000, 21) : [];
+  const H = 172 + t.length * 31 + (t.length ? 14 : 0);
+  const body = `
+    <defs>${GRADS}<clipPath id="f"><rect width="${W}" height="${H}" rx="24"/></clipPath></defs>
+    <g clip-path="url(#f)">
+      <rect width="${W}" height="${H}" fill="${C.bg}"/>
+      <circle cx="${W - 60}" cy="0" r="260" fill="url(#au1)"/>
+      <text x="42" y="62" class="m" font-size="15" fill="${C.accent}" letter-spacing="1.5">${num}</text>
+      <line x1="76" x2="116" y1="57" y2="57" stroke="${C.accent}" stroke-opacity=".5"/>
+      <text x="128" y="62" class="m" font-size="15" fill="${C.muted}" letter-spacing="1.5">${esc(label.toUpperCase())}</text>
+      <text x="40" y="128" class="s" font-size="52" font-weight="600" letter-spacing="-2" fill="url(#tg)">${esc(title)}</text>
+      ${lines(t, 42, 172, 31, `class="s" font-size="21" fill="${C.muted}"`)}
     </g>
-    <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="13.5" stroke="#3b1764" stroke-width="1.5"/>`;
-  write("terminal.svg", svg(W, H, body, style, "whoami — Robson Rodrigues, Full Stack Developer em Brasília-DF"));
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="23.5" stroke="${C.line}"/>`;
+  write(`title-${name}.svg`, svg(W, H, body, { title }));
 }
 
-/* ───────────────────────────── CONQUISTAS ───────────────────────────── */
-function achievements() {
-  const W = 900, H = 122;
-  const list = [
-    ["Fundou a RDL Development", "Startup de software com Daniel e Luiz"],
-    ["Formado em ADS — IFG", "Análise e Desenvolvimento de Sistemas"],
-    ["Primeiro site de cliente no ar", "Gabriela Decorações · 18 anos de mercado"],
-    ["Pix automático em produção", "Candangos Shop · Supabase Edge Functions"],
-    ["TCC defendido", "Mind Health · tecnologia e saúde mental"],
-    ["Fez um jogo inteiro com IA", "Guns & Dragons · C++ e SFML 3.0"],
-    ["Montou o primeiro PC aos 12", "e nunca mais desligou"],
-  ];
-  const STEP = 3.6, T = STEP * list.length, p = (s) => n((s / T) * 100);
-  const style = `${BASE_STYLE}
-    .toast{opacity:0;animation:toast ${T}s infinite both}
-    @keyframes toast{0%{opacity:0;transform:translateY(22px)}${p(0.35)}%{opacity:1;transform:translateY(0)}${p(STEP - 0.45)}%{opacity:1;transform:translateY(0)}${p(STEP)}%{opacity:0;transform:translateY(-22px)}100%{opacity:0;transform:translateY(-22px)}}
-    .shine{animation:shine ${T}s infinite both}
-    @keyframes shine{0%,${p(0.5)}%{transform:translateX(0)}${p(1.6)}%,100%{transform:translateX(760px)}}
-    .ring{transform-box:fill-box;transform-origin:center;animation:spin 2.4s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .spark{animation:tw 1.6s ease-in-out infinite}`;
-  const trophy = `<g fill="#2a1a00">
-      <path d="M-11-12H11V-4C11 5 5 9 0 9S-11 5-11-4Z"/>
-      <path d="M-11-9H-17C-17-1-13 2-9 2M11-9H17C17-1 13 2 9 2" stroke="#2a1a00" stroke-width="3" fill="none"/>
-      <rect x="-2.5" y="8" width="5" height="6"/><rect x="-9" y="13" width="18" height="4.5" rx="1.5"/></g>`;
-  const toasts = list.map(([title, sub], i) => `<g class="toast" style="animation-delay:${n(i * STEP)}s">
-      <rect x="150" y="19" width="600" height="84" rx="42" fill="#120a1f" stroke="url(#edge)" stroke-width="1.8"/>
-      <g clip-path="url(#pill)"><rect x="80" y="19" width="70" height="84" fill="url(#shineG)" transform="skewX(-20)" class="shine" style="animation-delay:${n(i * STEP)}s"/></g>
-      <circle cx="194" cy="61" r="30" fill="url(#gold)"/>
-      <circle cx="194" cy="61" r="34" stroke="#fde047" stroke-width="2" stroke-dasharray="30 184" stroke-linecap="round" class="ring"/>
-      <g transform="translate(194 62)">${trophy}</g>
-      <text x="240" y="47" font-family="${MONO}" font-size="10.5" font-weight="700" letter-spacing="3" fill="#fbbf24">CONQUISTA DESBLOQUEADA</text>
-      <text x="240" y="72" font-family="${SANS}" font-size="19" font-weight="700" fill="#fff">${esc(title)}</text>
-      <text x="240" y="91" font-family="${SANS}" font-size="12.5" fill="#a1a1aa">${esc(sub)}</text>
-      <g transform="translate(694 61)"><circle r="17" fill="#1f1530" stroke="#4c2a7a"/><text y="5" text-anchor="middle" font-family="${MONO}" font-size="13" font-weight="700" fill="#fde047">G</text></g>
-      <text x="${694 - 24}" y="66" text-anchor="end" font-family="${MONO}" font-size="15" font-weight="700" fill="#fff">100</text>
-    </g>`).join("");
-  const sparks = [[160, 30], [228, 22], [168, 100], [232, 104], [742, 30]].map(([x, y], i) =>
-    `<path d="M${x} ${y - 5}L${x + 1.4} ${y - 1.4}L${x + 5} ${y}L${x + 1.4} ${y + 1.4}L${x} ${y + 5}L${x - 1.4} ${y + 1.4}L${x - 5} ${y}L${x - 1.4} ${y - 1.4}Z" fill="#fde047" class="spark" style="animation-delay:${n(i * 0.3)}s"/>`).join("");
-  const body = `<defs>
-      <linearGradient id="edge" x1="0" x2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset=".5" stop-color="#7f2ccb"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
-      <radialGradient id="gold" cx=".35" cy=".3"><stop offset="0" stop-color="#fff7cc"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#b45309"/></radialGradient>
-      <linearGradient id="shineG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <clipPath id="pill"><rect x="150" y="19" width="600" height="84" rx="42"/></clipPath>
+// ───────────────────────────── Projetos ─────────────────────────────
+const PROJECTS = [
+  { id: "simula-sisu", title: "Simula Sisu", kind: "Product", year: "2026", status: "Visit site", stack: ["Next.js", "Express", "Prisma", "PostgreSQL"],
+    summary: "A simulator for Brazil's university admissions, using each school's official weights, with side-by-side course comparison and an AI assistant." },
+  { id: "gabriela", title: "Gabriela Decorações", kind: "Client", year: "2025", status: "Visit site", stack: ["React", "TypeScript", "Vite", "Tailwind"],
+    summary: "Landing page for a curtain and blinds company with 18 years in business, built to drive quote requests on WhatsApp." },
+  { id: "shine", title: "Shinê Editor", kind: "Client", year: "2026", status: "Visit site", stack: ["React 19", "Vite", "CSS", "i18n"],
+    summary: "Portfolio for a YouTube video editor, in three languages, scoring 100 on PageSpeed for both mobile and desktop." },
+  { id: "clinica", title: "Clínica Araújo", kind: "Client", year: "2026", status: "Launching soon", stack: ["React", "Vite", "Tailwind", "Framer Motion"],
+    summary: "Website for a dental clinic: treatments, the doctors, a kids' corner and WhatsApp booking. Lighthouse 100 on desktop." },
+  { id: "rdl", title: "RDL Development", kind: "Client", year: "2026", status: "Visit site", stack: ["Next.js 16", "Tailwind 4"],
+    summary: "Website for our dev studio, animated with nothing but CSS and the Web Animations API." },
+  { id: "candangos", title: "Candangos Shop", kind: "Product", year: "2025", status: "Visit site", stack: ["React", "Supabase", "Edge Functions", "Pix"],
+    summary: "A full online store for a Hytale gaming guild, focused on a smooth checkout with Pix payments." },
+  { id: "mind-health", title: "Mind Health", kind: "Side project", year: "2025", status: "View code", stack: ["React", "Node.js", "RBAC"],
+    summary: "Mental health platform and my college capstone. I built the React front-end from Jul 2024 to Dec 2025." },
+  { id: "aviator", title: "Aviator Clone Pro", kind: "Side project", year: "2024", status: "View code", stack: ["React 19", "JavaScript"],
+    summary: "A real-time game simulator running at 60 FPS, with a custom multiplier engine." },
+];
+
+function projectCard(p) {
+  const W = 600, H = 590, pad = 16;
+  const iw = W - pad * 2, ih = n((iw * 750) / 1200);
+  const sum = wrap(p.summary, W - pad * 2 - 8, 19).slice(0, 3);
+  const soon = p.status === "Launching soon";
+  const chipW = Math.round(textWidth(p.status, 14) + (soon ? 28 : 46));
+  const ty = pad + ih + 52;
+  const body = `
+    <defs>
+      <clipPath id="ic"><rect x="${pad}" y="${pad}" width="${iw}" height="${ih}" rx="14"/></clipPath>
+      <linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="${C.bg}" stop-opacity="0"/><stop offset="1" stop-color="${C.bg}" stop-opacity=".35"/></linearGradient>
     </defs>
-    ${toasts}${sparks}`;
-  write("achievements.svg", svg(W, H, body, style, "Conquistas desbloqueadas"));
-}
-
-/* ───────────────────────────── PROJETO EM DESTAQUE ───────────────────────────── */
-function featured({ file, url, desk, deskH, mob, mobH, click, chips, rank, title }) {
-  const W = 900, H = 560, T = 24;
-  const rand = rng(77);
-  // notebook
-  const VX = 52, VY = 80, VW = 596, VH = 342, IMG_H = Math.round((deskH * VW) / 792);
-  const maxD = IMG_H - VH;
-  // celular
-  const PX = 708, PY = 158, PW = 160, PH = 344, PIMG_H = Math.round((mobH * PW) / 242);
-  const maxM = PIMG_H - PH;
-
-  const scrollAnim = (stops) => {
-    const times = stops.map((s) => s[0]), vals = stops.map((s) => `0 ${-s[1]}`);
-    const splines = stops.slice(1).map((s, i) => (stops[i][1] === s[1] ? "0 0 1 1" : ".65 0 .35 1")).join(";");
-    return `<animateTransform attributeName="transform" type="translate" dur="${T}s" repeatCount="indefinite" calcMode="spline" values="${vals.join(";")}" keyTimes="${kt(times, T)}" keySplines="${splines}"/>`;
-  };
-  const deskScroll = scrollAnim([[0, 0], [4.3, 0], [6.3, 560], [7.5, 560], [9.5, 1100], [10.7, 1100], [12.7, 1600], [13.9, 1600], [15.9, maxD], [18.5, maxD], [20, 0], [T, 0]]);
-  const mobScroll = scrollAnim([[0, 0], [4.6, 0], [6.6, 700], [8, 700], [10, 1400], [11.5, 1400], [13.5, 2100], [15, 2100], [17, maxM], [19, maxM], [20.5, 0], [T, 0]]);
-
-  // digitação da URL
-  const CHAR = 0.05, UCW = 6.9, UX = 146;
-  const ut = [0, 0.3], uv = [0, 0];
-  for (let k = 1; k <= url.length; k++) { ut.push(0.3 + k * CHAR); uv.push(n(k * UCW)); }
-  ut.push(23.5); uv.push(0);
-
-  // cursor: caminha até "VER PROJETOS" e clica
-  const [BX, BY] = click;
-  const cur = [[0, 560, 400], [2.2, 560, 400], [3.8, BX, BY], [4.3, BX, BY], [5.2, 470, 300], [9, 430, 260], [13, 520, 330], [17, 460, 280], [20, 560, 400], [T, 560, 400]];
-
-  let cx = 40;
-  const chipEls = chips.map((c, i) => {
-    const w = c.length * 7.6 + 26;
-    const el = `<g style="animation:bob 2.6s ease-in-out ${n(-i * 0.4)}s infinite"><rect x="${n(cx)}" y="490" width="${n(w)}" height="28" rx="14" fill="#160b28" stroke="#4c2a7a"/><text x="${n(cx + w / 2)}" y="508.5" text-anchor="middle" font-family="${MONO}" font-size="12" fill="#e9d5ff">${esc(c)}</text></g>`;
-    cx += w + 10;
-    return el;
-  }).join("");
-
-  let particles = "";
-  for (let i = 0; i < 26; i++) {
-    const d = n(5 + rand() * 6);
-    particles += `<circle cx="${n(rand() * W)}" cy="${n(80 + rand() * 460)}" r="${n(0.8 + rand() * 1.6)}" fill="${rand() > 0.5 ? "#c084fc" : "#22d3ee"}" style="animation:rise ${d}s linear ${n(-rand() * d)}s infinite"/>`;
-  }
-
-  const style = `${BASE_STYLE}
-    @keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.8}100%{transform:translateY(-90px);opacity:0}}
-    .live{animation:pulse 1.4s ease-in-out infinite}
-    .ping{transform-box:fill-box;transform-origin:center;animation:ping 1.6s ease-out infinite}
-    @keyframes ping{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.6);opacity:0}}
-    .legend{animation:shimmer 3s ease-in-out infinite}
-    @keyframes shimmer{0%,100%{opacity:.85}50%{opacity:1}}`;
-
-  const body = `<defs>
-      <clipPath id="panel"><rect width="${W}" height="${H}" rx="20"/></clipPath>
-      <radialGradient id="bg" cx=".38" cy=".42" r=".75"><stop offset="0" stop-color="#2b0b4d"/><stop offset=".7" stop-color="#0b0614"/></radialGradient>
-      <pattern id="gridp" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#7f2ccb" stroke-opacity=".12"/></pattern>
-      <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a3a"/><stop offset="1" stop-color="#16161f"/></linearGradient>
-      <linearGradient id="base" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a4c"/><stop offset="1" stop-color="#14141c"/></linearGradient>
-      <linearGradient id="goldG" x1="0" x2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".5" stop-color="#f59e0b"/><stop offset="1" stop-color="#fde68a"/>
-        <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0" dur="3s" repeatCount="indefinite"/></linearGradient>
-      <clipPath id="vp"><rect x="${VX}" y="${VY}" width="${VW}" height="${VH}"/></clipPath>
-      <clipPath id="ph"><rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="24"/></clipPath>
-      <clipPath id="urlc"><rect x="${UX - 1}" y="56" height="18" width="0"><animate attributeName="width" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="${uv.join(";")}" keyTimes="${kt(ut, T)}"/></rect></clipPath>
-      ${GLOW("glow", 6)}${GLOW("soft", 14)}
-    </defs>
-    <g clip-path="url(#panel)">
-      <rect width="${W}" height="${H}" fill="url(#bg)"/>
-      <rect width="${W}" height="${H}" fill="url(#gridp)"/>
-      ${particles}
-
-      <!-- notebook -->
-      <rect x="40" y="34" width="620" height="400" rx="16" fill="#7f2ccb" opacity=".35" filter="url(#soft)"/>
-      <rect x="40" y="34" width="620" height="400" rx="16" fill="url(#lid)" stroke="#43435a"/>
-      <circle cx="350" cy="41" r="2" fill="#555"/>
-      <rect x="${VX}" y="46" width="${VW}" height="376" rx="5" fill="#0a0a0f"/>
-      <rect x="${VX}" y="46" width="${VW}" height="34" fill="#1d1d29"/>
-      <circle cx="68" cy="63" r="5" fill="#ff5f57"/><circle cx="84" cy="63" r="5" fill="#febc2e"/><circle cx="100" cy="63" r="5" fill="#28c840"/>
-      <rect x="120" y="53" width="430" height="21" rx="10.5" fill="#2a2a3a"/>
-      <g transform="translate(131 58)" fill="#4ade80"><rect x="0" y="4.5" width="8" height="6.5" rx="1.2"/><path d="M1.6 4.5V3a2.4 2.4 0 0 1 4.8 0v1.5" stroke="#4ade80" stroke-width="1.4" fill="none"/></g>
-      <text x="${UX}" y="68" font-family="${MONO}" font-size="11.5" fill="#e4e4e7" clip-path="url(#urlc)" textLength="${n(url.length * UCW)}" lengthAdjust="spacingAndGlyphs">${url}</text>
-      <path d="M574 58a5.5 5.5 0 1 0 5.5 5.5" stroke="#8b8ba0" stroke-width="1.5" fill="none"/><path d="M579.5 58v4h-4" stroke="#8b8ba0" stroke-width="1.5" fill="none"/>
-      <g clip-path="url(#vp)">
-        <image href="${img64(desk)}" x="${VX}" y="${VY}" width="${VW}" height="${IMG_H}" preserveAspectRatio="none">${deskScroll}</image>
-        <rect x="${VX}" y="${VY}" width="${VW}" height="${VH}" fill="#0a0a0f">
-          <animate attributeName="opacity" dur="${T}s" repeatCount="indefinite" values="1;1;0;0;1;1" keyTimes="0;${kt([1.8, 2.3, 23.1, 23.5], T)};1"/>
-        </rect>
-      </g>
-      <rect x="${VX}" y="78" height="2.5" width="0" fill="#c084fc" filter="url(#glow)">
-        <animate attributeName="width" dur="${T}s" repeatCount="indefinite" values="0;0;${VW};${VW}" keyTimes="0;${kt([1.6, 2.3], T)};1"/>
-        <animate attributeName="opacity" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="0;1;0" keyTimes="0;${kt([1.6, 2.5], T)}"/>
-      </rect>
-      <!-- clique -->
-      <circle cx="${BX}" cy="${BY}" r="4" stroke="#fff" stroke-width="2" fill="none" opacity="0">
-        <animate attributeName="r" dur="${T}s" repeatCount="indefinite" values="4;4;26;26" keyTimes="0;${kt([3.9, 4.5], T)};1"/>
-        <animate attributeName="opacity" dur="${T}s" repeatCount="indefinite" values="0;0;.9;0;0" keyTimes="0;${kt([3.85, 3.9, 4.5], T)};1"/>
-      </circle>
-      <g opacity="0">
-        <animate attributeName="opacity" calcMode="discrete" dur="${T}s" repeatCount="indefinite" values="0;1;0" keyTimes="0;${kt([2.1, 20.5], T)}"/>
-        <animateTransform attributeName="transform" type="translate" dur="${T}s" repeatCount="indefinite" calcMode="spline" values="${cur.map((c) => `${c[1]} ${c[2]}`).join(";")}" keyTimes="${kt(cur.map((c) => c[0]), T)}" keySplines="${cur.slice(1).map(() => ".45 0 .3 1").join(";")}"/>
-        <path d="M0 0V17L4.6 12.6L7.6 19.4L10.4 18.2L7.5 11.6H13.6Z" fill="#fff" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/>
-      </g>
-      <path d="M20 434H680L702 452Q704 460 696 460H4Q-4 460-2 452Z" fill="url(#base)"/>
-      <rect x="300" y="434" width="100" height="6" rx="3" fill="#0e0e14"/>
-
-      <!-- celular -->
-      <rect x="${PX - 8}" y="${PY - 8}" width="${PW + 16}" height="${PH + 16}" rx="32" fill="#22d3ee" opacity=".22" filter="url(#soft)"/>
-      <rect x="${PX - 8}" y="${PY - 8}" width="${PW + 16}" height="${PH + 16}" rx="32" fill="#101018" stroke="#4a4a60" stroke-width="2"/>
-      <rect x="${PX + PW + 8}" y="${PY + 70}" width="3" height="44" rx="1.5" fill="#4a4a60"/>
-      <rect x="${PX - 11}" y="${PY + 60}" width="3" height="26" rx="1.5" fill="#4a4a60"/><rect x="${PX - 11}" y="${PY + 94}" width="3" height="26" rx="1.5" fill="#4a4a60"/>
-      <g clip-path="url(#ph)">
-        <rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" fill="#0a0a0f"/>
-        <image href="${img64(mob)}" x="${PX}" y="${PY}" width="${PW}" height="${PIMG_H}" preserveAspectRatio="none">${mobScroll}</image>
-        <rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" fill="#0a0a0f">
-          <animate attributeName="opacity" dur="${T}s" repeatCount="indefinite" values="1;1;0;0;1;1" keyTimes="0;${kt([2.2, 2.8, 23.1, 23.5], T)};1"/>
-        </rect>
-      </g>
-      <rect x="${PX + PW / 2 - 28}" y="${PY + 8}" width="56" height="15" rx="7.5" fill="#000"/>
-
-      <!-- etiquetas -->
-      <g class="legend"><rect x="700" y="40" width="176" height="32" rx="16" fill="#1f1400" stroke="url(#goldG)" stroke-width="1.6"/>
-      <text x="788" y="61" text-anchor="middle" font-family="${MONO}" font-size="12.5" font-weight="700" letter-spacing="3" fill="#fde68a">★ ${rank}</text></g>
-      <rect x="700" y="84" width="176" height="32" rx="16" fill="#06210f" stroke="#22c55e" stroke-width="1.4"/>
-      <circle cx="724" cy="100" r="4.5" fill="#4ade80" class="ping"/><circle cx="724" cy="100" r="4.5" fill="#4ade80" class="live"/>
-      <text x="798" y="105" text-anchor="middle" font-family="${MONO}" font-size="12.5" font-weight="700" letter-spacing="2" fill="#86efac">NO AR</text>
-      ${chipEls}
-      <text x="${W - 24}" y="540" text-anchor="end" font-family="${MONO}" font-size="11" letter-spacing="2" fill="#a78bfa">CLIQUE PARA VISITAR ↗</text>
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="22" fill="${C.surface}" stroke="${C.line}"/>
+    <g clip-path="url(#ic)">
+      <image href="${webp(`work/${p.id}-1200.webp`)}" x="${pad}" y="${pad}" width="${iw}" height="${ih}" preserveAspectRatio="xMidYMin slice"/>
+      <rect x="${pad}" y="${pad}" width="${iw}" height="${ih}" fill="url(#sh)"/>
     </g>
-    <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" stroke="#7f2ccb" stroke-opacity=".6" stroke-width="1.5"/>`;
-  write(file, svg(W, H, body, style, title));
-}
-
-/* ───────────────────────────── CARTAS DE PROJETO ───────────────────────────── */
-const RARITY = {
-  lendario: { label: "LENDÁRIO", c1: "#fde68a", c2: "#f59e0b", text: "#1f1400" },
-  epico: { label: "ÉPICO", c1: "#e879f9", c2: "#7c3aed", text: "#1a0330" },
-  raro: { label: "RARO", c1: "#67e8f9", c2: "#2563eb", text: "#03142e" },
-  caotico: { label: "CAÓTICO", c1: "#fca5a5", c2: "#dc2626", text: "#2a0505" },
-  academico: { label: "ACADÊMICO", c1: "#86efac", c2: "#059669", text: "#032013" },
-};
-
-function sisuArt(x, y, w, h) {
-  const bars = [0.42, 0.66, 0.5, 0.82, 0.58, 0.9, 0.7, 0.48, 0.76];
-  const bw = 26, gap = 14, bx0 = x + 150;
-  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#sisuBg)"/>
-    <g stroke="#60a5fa" stroke-opacity=".14">${Array.from({ length: 10 }, (_, i) => `<line x1="${x}" x2="${x + w}" y1="${y + i * 18}" y2="${y + i * 18}"/>`).join("")}</g>
-    ${bars.map((v, i) => `<rect x="${bx0 + i * (bw + gap)}" y="${n(y + h - 14 - v * (h - 40))}" width="${bw}" height="${n(v * (h - 40))}" rx="4" fill="url(#barG)" class="bar" style="animation-delay:${n(i * 0.12)}s"/>`).join("")}
-    <line x1="${x + 140}" x2="${x + w - 6}" y1="${y + 62}" y2="${y + 62}" stroke="#f472b6" stroke-width="2" stroke-dasharray="6 5" class="cut"/>
-    <rect x="${x + w - 104}" y="${y + 45}" width="98" height="15" rx="3" fill="#071433" class="cut"/><text x="${x + w - 10}" y="${y + 56}" text-anchor="end" font-family="${MONO}" font-size="10" font-weight="700" letter-spacing="1.5" fill="#f9a8d4" class="cut">NOTA DE CORTE</text>
-    <text x="${x + 18}" y="${y + 92}" font-family="${DISPLAY}" font-weight="900" font-size="30" fill="#fff">SISU</text>
-    <text x="${x + 18}" y="${y + 120}" font-family="${DISPLAY}" font-weight="900" font-size="30" fill="#60a5fa">2026</text>
-    <text x="${x + 18}" y="${y + 142}" font-family="${MONO}" font-size="10" letter-spacing="2" fill="#93c5fd">SIMULADOR</text>`;
-}
-
-function card({ id, title, desc, chips, rarity, badge, thumb, live }, i) {
-  const W = 420, H = 300, R = RARITY[rarity];
-  const pillW = R.label.length * 8.2 + 34;
-  const badgeW = badge.length * 7.4 + (live ? 34 : 22);
-  let cx = 22;
-  const chipEls = chips.map((c) => {
-    const w = c.length * 6.9 + 18;
-    const el = `<rect x="${n(cx)}" y="267" width="${n(w)}" height="21" rx="10.5" fill="#1a1029" stroke="#3b2463"/><text x="${n(cx + w / 2)}" y="281.5" text-anchor="middle" font-family="${MONO}" font-size="11" fill="#d8b4fe">${esc(c)}</text>`;
-    cx += w + 7;
-    return el;
-  }).join("");
-  const style = `${BASE_STYLE}
-    .holo{animation:holo 7s ease-in-out infinite;animation-delay:${n(i * 1.1)}s}
-    @keyframes holo{0%,62%{transform:translateX(-160px) skewX(-18deg)}88%,100%{transform:translateX(620px) skewX(-18deg)}}
-    .spark{animation:tw 1.8s ease-in-out infinite}
-    .live{animation:pulse 1.4s ease-in-out infinite}
-    .bar{transform-box:fill-box;transform-origin:bottom;animation:grow 3.2s cubic-bezier(.3,.7,.2,1) infinite}
-    @keyframes grow{0%{transform:scaleY(.05)}35%,80%{transform:scaleY(1)}100%{transform:scaleY(.05)}}
-    .cut{animation:pulse 1.6s ease-in-out infinite}`;
-  const thumbEl = thumb === "sisu"
-    ? sisuArt(12, 12, 396, 170)
-    : `<image href="${img64(thumb)}" x="12" y="12" width="396" height="170" preserveAspectRatio="xMidYMin slice"/>`;
-  const body = `<defs>
-      <linearGradient id="bd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${R.c1}"/><stop offset=".5" stop-color="${R.c2}"/><stop offset="1" stop-color="${R.c1}"/>
-        <animateTransform attributeName="gradientTransform" type="rotate" values="0 .5 .5;360 .5 .5" dur="6s" repeatCount="indefinite"/></linearGradient>
-      <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d0817" stop-opacity="0"/><stop offset="1" stop-color="#0d0817"/></linearGradient>
-      <linearGradient id="holoG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".35" stop-color="${R.c1}" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".28"/><stop offset=".65" stop-color="#22d3ee" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <linearGradient id="sisuBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071433"/><stop offset="1" stop-color="#1e1b4b"/></linearGradient>
-      <linearGradient id="barG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#67e8f9"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
-      <clipPath id="card"><rect x="1.5" y="1.5" width="${W - 3}" height="${H - 3}" rx="18"/></clipPath>
-      <clipPath id="th"><rect x="12" y="12" width="396" height="170" rx="12"/></clipPath>
-    </defs>
-    <rect x="1.5" y="1.5" width="${W - 3}" height="${H - 3}" rx="18" fill="#0d0817"/>
-    <g clip-path="url(#th)">${thumbEl}<rect x="12" y="112" width="396" height="70" fill="url(#fade)"/></g>
-    <rect x="22" y="22" width="${n(pillW)}" height="24" rx="12" fill="${R.c1}"/>
-    <text x="${n(22 + pillW / 2)}" y="38.5" text-anchor="middle" font-family="${MONO}" font-size="11.5" font-weight="700" letter-spacing="2" fill="${R.text}">★ ${R.label}</text>
-    <rect x="${n(398 - badgeW)}" y="22" width="${n(badgeW)}" height="24" rx="12" fill="#0b0614" fill-opacity=".85" stroke="${live ? "#22c55e" : "#6b5a8a"}"/>
-    ${live ? `<circle cx="${n(398 - badgeW + 14)}" cy="34" r="4" fill="#4ade80" class="live"/>` : ""}
-    <text x="${n(398 - badgeW + (live ? 26 : 11))}" y="38" font-family="${MONO}" font-size="11" font-weight="700" letter-spacing="1" fill="${live ? "#86efac" : "#c4b5fd"}">${esc(badge)}</text>
-    <text x="22" y="212" font-family="${SANS}" font-size="21" font-weight="700" fill="#fff">${esc(title)}</text>
-    ${desc.map((d, k) => `<text x="22" y="${236 + k * 18}" font-family="${SANS}" font-size="13" fill="#a1a1aa">${esc(d)}</text>`).join("")}
-    ${chipEls}
-    <g clip-path="url(#card)"><rect x="0" y="0" width="110" height="${H}" fill="url(#holoG)" class="holo"/></g>
-    ${[[n(22 + pillW + 10), 26], [n(22 + pillW + 18), 40]].map(([x, y], k) => `<path d="M${x} ${y - 4}L${x + 1.1} ${y - 1.1}L${x + 4} ${y}L${x + 1.1} ${y + 1.1}L${x} ${y + 4}L${x - 1.1} ${y + 1.1}L${x - 4} ${y}L${x - 1.1} ${y - 1.1}Z" fill="${R.c1}" class="spark" style="animation-delay:${k * 0.6}s"/>`).join("")}
-    <rect x="1.5" y="1.5" width="${W - 3}" height="${H - 3}" rx="18" stroke="url(#bd)" stroke-width="2.5"/>`;
-  write(`card-${id}.svg`, svg(W, H, body, style, title));
-}
-
-function cards() {
-  [
-    { id: "portfolio", title: "Portfólio RobsonDev", rarity: "epico", badge: "NO AR", live: true, thumb: "portfolio.jpg",
-      desc: ["Next.js 16 com i18n PT/EN, tema claro/escuro", "e Spotify “Now Playing” em tempo real."], chips: ["Next.js 16", "React 19", "Tailwind v4", "Framer"] },
-    { id: "candangos", title: "Candangos Shop", rarity: "epico", badge: "NO AR", live: true, thumb: "candangos.jpg",
-      desc: ["Loja da guilda Candangos (Hytale): Pix, login", "com Discord e painel admin protegido por RLS."], chips: ["React", "Supabase", "Edge Functions", "Tailwind"] },
-    { id: "sisu", title: "Simula SISU 2026", rarity: "raro", badge: "EM DEV · PRIVADO", thumb: "sisu",
-      desc: ["Simulador de notas de corte do SISU em", "monorepo full stack com banco no Docker."], chips: ["Next.js", "Express", "Prisma", "PostgreSQL", "Docker"] },
-    { id: "aviator", title: "Aviator Clone Pro", rarity: "raro", badge: "OPEN SOURCE", thumb: "aviator.jpg",
-      desc: ["Crash game honesto em tempo real: WebSockets,", "bots multiplayer e gráfico com curvas Bézier."], chips: ["Next.js 14", "NestJS", "Socket.io", "Framer"] },
-    { id: "guns", title: "Guns & Dragons", rarity: "caotico", badge: "JOGO", thumb: "guns.jpg",
-      desc: ["Jogo 2D em C++ feito com IA: dragões, buraco", "negro, Modo Titan e 2.000+ linhas no main.cpp."], chips: ["C++", "SFML 3.0", "IA", "Game Dev"] },
-    { id: "mindhealth", title: "Mind Health", rarity: "academico", badge: "TCC", thumb: "mindhealth.jpg",
-      desc: ["Trabalho de conclusão de curso sobre", "tecnologia a serviço da saúde mental."], chips: ["TCC", "ADS · IFG", "Saúde mental"] },
-  ].forEach(card);
-}
-
-/* ───────────────────────────── ARSENAL (ÓRBITA) ───────────────────────────── */
-function orbit() {
-  const W = 900, H = 530, CX = 450, CY = 270;
-  const rand = rng(5);
-  const rings = [
-    { rx: 150, ry: 50, dur: 22, dir: -1, color: "#22d3ee", size: 38, label: "FRONT-END", icons: ["react", "nextjs", "ts", "js", "tailwind", "vite"] },
-    { rx: 258, ry: 88, dur: 32, dir: 1, color: "#f472b6", size: 40, label: "BACK-END", icons: ["nodejs", "express", "nestjs", "prisma", "supabase", "spring", "laravel"] },
-    { rx: 368, ry: 126, dur: 46, dir: -1, color: "#fde047", size: 42, label: "DADOS & INFRA", icons: ["postgres", "mysql", "mongodb", "redis", "docker", "linux", "nginx", "vercel", "git", "githubactions"] },
-  ];
-  const langs = [["ts", "TypeScript"], ["js", "JavaScript"], ["java", "Java"], ["c", "C"], ["cpp", "C++"], ["python", "Python"], ["lua", "Lua"]];
-  const used = new Set([...rings.flatMap((r) => r.icons), ...langs.map((l) => l[0])]);
-  const defs = [...used].map((i) => `<image id="i-${i}" x="-.5" y="-.5" width="1" height="1" href="${icon64(i)}"/>`).join("");
-
-  const STEPS = 48;
-  let back = "", front = "";
-  for (const r of rings) {
-    // dir 1: θ cresce (sentido horário na tela); dir -1: decresce
-    const path = `M${CX + r.rx} ${CY}A${r.rx} ${r.ry} 0 1 1 ${CX - r.rx} ${CY}A${r.rx} ${r.ry} 0 1 1 ${CX + r.rx} ${CY}`;
-    const scales = [], times = [];
-    for (let k = 0; k <= STEPS; k++) {
-      const p = k / STEPS;
-      const th = 2 * Math.PI * (r.dir === 1 ? p : 1 - p);
-      scales.push(n(0.7 + 0.3 * ((Math.sin(th) + 1) / 2)));
-      times.push((k / STEPS).toFixed(4));
-    }
-    const kp = r.dir === 1 ? "0;1" : "1;0";
-    // metade de trás (sinθ < 0) = primeira ou segunda metade do ciclo
-    const backVis = r.dir === 1 ? "0;1" : "1;0", frontVis = r.dir === 1 ? "1;0" : "0;1";
-    r.icons.forEach((ic, j) => {
-      const begin = n(-(j / r.icons.length) * r.dur);
-      const copy = (vis, op) => `<g><animateMotion path="${path}" dur="${r.dur}s" begin="${begin}s" repeatCount="indefinite" keyPoints="${kp}" keyTimes="0;1" calcMode="linear"/>
-        <g><animateTransform attributeName="transform" type="scale" values="${scales.join(";")}" keyTimes="${times.join(";")}" dur="${r.dur}s" begin="${begin}s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" calcMode="discrete" values="${vis}" keyTimes="0;.5" dur="${r.dur}s" begin="${begin}s" repeatCount="indefinite"/>
-        <use href="#i-${ic}" transform="scale(${r.size})" opacity="${op}"/></g></g>`;
-      back += copy(backVis, 0.6);
-      front += copy(frontVis, 1);
-    });
-  }
-
-  const ellipses = rings.map((r, i) => `<ellipse cx="${CX}" cy="${CY}" rx="${r.rx}" ry="${r.ry}" stroke="${r.color}" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="3 7" class="flow" style="animation-duration:${8 + i * 4}s"/>`).join("");
-  const frontArcs = rings.map((r) => `<path d="M${CX - r.rx} ${CY}A${r.rx} ${r.ry} 0 0 0 ${CX + r.rx} ${CY}" stroke="${r.color}" stroke-opacity=".55" stroke-width="1.6" filter="url(#g2)"/>`).join("");
-
-  const LSTEP = 1.6, LT = LSTEP * langs.length, lp = (s) => n((s / LT) * 100);
-  const core = `<circle cx="${CX}" cy="${CY}" r="96" fill="url(#halo)" class="halo"/>
-    <circle cx="${CX}" cy="${CY}" r="64" fill="url(#coreG)" stroke="#c084fc" stroke-width="1.5"/>
-    <circle cx="${CX}" cy="${CY}" r="73" stroke="#c084fc" stroke-opacity=".7" stroke-width="1.5" stroke-dasharray="4 10" class="spinA"/>
-    <circle cx="${CX}" cy="${CY}" r="81" stroke="#22d3ee" stroke-opacity=".45" stroke-width="1" stroke-dasharray="40 18 6 18" class="spinB"/>
-    <text x="${CX}" y="${CY - 34}" text-anchor="middle" font-family="${MONO}" font-size="8.5" letter-spacing="2.5" fill="#e9d5ff" opacity=".8">LINGUAGENS</text>
-    ${langs.map(([ic, name], i) => `<g class="lang" style="animation-delay:${n(i * LSTEP)}s"><use href="#i-${ic}" transform="translate(${CX} ${CY - 4}) scale(40)"/><text x="${CX}" y="${CY + 34}" text-anchor="middle" font-family="${MONO}" font-size="12" font-weight="700" fill="#fff">${name}</text></g>`).join("")}`;
-
-  const legend = rings.map((r, i) => {
-    const x = 210 + i * 180;
-    return `<circle cx="${x}" cy="${H - 30}" r="5" fill="${r.color}" filter="url(#g2)"/><text x="${x + 13}" y="${H - 25.5}" font-family="${MONO}" font-size="12" font-weight="700" letter-spacing="2" fill="#e4e4e7">${esc(r.label)}</text>`;
-  }).join("");
-
-  const style = `${BASE_STYLE}
-    .flow{animation:flow 10s linear infinite}@keyframes flow{to{stroke-dashoffset:-100}}
-    .spinA{transform-box:fill-box;transform-origin:center;animation:spin 14s linear infinite}
-    .spinB{transform-box:fill-box;transform-origin:center;animation:spin 20s linear infinite reverse}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .halo{animation:pulse 3.4s ease-in-out infinite}
-    .lang{opacity:0;animation:lang ${LT}s infinite both}
-    @keyframes lang{0%{opacity:0}${lp(0.2)}%,${lp(LSTEP - 0.2)}%{opacity:1}${lp(LSTEP)}%,100%{opacity:0}}`;
-
-  const body = `<defs>${defs}
-      <clipPath id="panel"><rect width="${W}" height="${H}" rx="20"/></clipPath>
-      <radialGradient id="bg" cx=".5" cy=".5" r=".7"><stop offset="0" stop-color="#1c0838"/><stop offset="1" stop-color="#05020b"/></radialGradient>
-      <radialGradient id="neb1" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#db2777" stop-opacity=".22"/><stop offset="1" stop-color="#db2777" stop-opacity="0"/></radialGradient>
-      <radialGradient id="neb2" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#0891b2" stop-opacity=".2"/><stop offset="1" stop-color="#0891b2" stop-opacity="0"/></radialGradient>
-      <radialGradient id="coreG" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#a855f7"/><stop offset=".55" stop-color="#4c1d95"/><stop offset="1" stop-color="#14052a"/></radialGradient>
-      <radialGradient id="halo"><stop offset=".55" stop-color="#a855f7" stop-opacity=".45"/><stop offset="1" stop-color="#a855f7" stop-opacity="0"/></radialGradient>
-      ${GLOW("g2", 2.5)}
-    </defs>
-    <g clip-path="url(#panel)">
-      <rect width="${W}" height="${H}" fill="url(#bg)"/>
-      <ellipse cx="190" cy="140" rx="260" ry="160" fill="url(#neb1)"/>
-      <ellipse cx="720" cy="380" rx="280" ry="170" fill="url(#neb2)"/>
-      ${stars(rand, 110, W, H)}
-      ${ellipses}
-      ${back}
-      ${core}
-      ${frontArcs}
-      ${front}
-      ${legend}
+    <rect x="${pad + 0.5}" y="${pad + 0.5}" width="${iw - 1}" height="${ih - 1}" rx="13.5" stroke="${C.line}"/>
+    <text x="${pad + 4}" y="${ty}" class="s" font-size="27" font-weight="600" letter-spacing="-0.8" fill="${C.ink}">${esc(p.title)}</text>
+    <g transform="translate(${W - pad - chipW} ${ty - 25})">
+      <rect width="${chipW}" height="34" rx="17" fill="${soon ? "rgba(168,121,255,0.14)" : C.surface2}" stroke="${soon ? "rgba(168,121,255,0.4)" : C.line}"/>
+      <text x="14" y="22" class="s" font-size="14" font-weight="600" fill="${soon ? C.accent : C.ink}">${esc(p.status)}</text>
+      ${soon ? "" : ARROW_UR(chipW - 28, 12, 0.85, C.accent)}
     </g>
-    <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" stroke="#7f2ccb" stroke-opacity=".6" stroke-width="1.5"/>`;
-  write("stack-orbit.svg", svg(W, H, body, style, "Stack: React, Next.js, TypeScript, Node.js, NestJS, Prisma, Supabase, PostgreSQL, Docker e mais"));
+    ${lines(sum, pad + 4, ty + 38, 28, `class="s" font-size="19" fill="${C.muted}"`)}
+    <line x1="${pad + 4}" x2="${W - pad - 4}" y1="${H - 52}" y2="${H - 52}" stroke="${C.line}"/>
+    <text x="${pad + 4}" y="${H - 22}" class="m" font-size="14" fill="${C.muted}">${esc(p.stack.join(" / "))}</text>
+    <text x="${W - pad - 4}" y="${H - 22}" text-anchor="end" class="m" font-size="14" fill="${C.muted}">${esc(`${p.kind}, ${p.year}`)}</text>`;
+  write(`card-${p.id}.svg`, svg(W, H, body, { title: `${p.title} — ${p.summary}` }));
 }
 
-/* ───────────────────────────── CONTATO (BOTÕES DE FLIPERAMA) ───────────────────────────── */
-function arcade() {
-  const list = [
-    ["linkedin", "LINKEDIN", "/in/robson-rodrigues-dev", "#3b82f6", "#1e40af", "#bfdbfe", "P1"],
-    ["discord", "DISCORD", "chama no privado", "#8b5cf6", "#4c1d95", "#ddd6fe", "P2"],
-    ["portfolio", "PORTFÓLIO", "site ao vivo", "#ec4899", "#9d174d", "#fbcfe8", "P3"],
+// ───────────────────────────── Candidarte (destaque) ─────────────────────────────
+function candidarte() {
+  const W = 1200, H = 760;
+  const [pw, ph] = webpSize("candidarte-poster.webp");
+  const px = 32, py = 32, pW = 640, pH = n((pW * ph) / pw);
+  const rx = px + pW + 40, rw = W - rx - 40;
+  const text = wrap("A dashboard that keeps your job hunt organized. Paste a job link and AI tells you how well your résumé matches it.", rw, 20);
+  const feats = [
+    ["Browser extension", "Spots when you apply on LinkedIn or Gupy and saves the job in one click."],
+    ["Résumé tuned per job", "Suggests the keywords applicant tracking systems scan for, without making anything up."],
+    ["Daily watch", "Checks every day whether the job is still open and emails you when something changes."],
+    ["Your numbers", "Your funnel, response rate and time to first reply, all in one place."],
   ];
-  list.forEach(([id, label, sub, c, dark, light, p], i) => {
-    const W = 220, H = 210, CX = 110;
-    const iconName = id === "portfolio" ? "vercel" : id;
-    const style = `${BASE_STYLE}
-      .top{animation:press 3.6s infinite;animation-delay:${i * 1.2}s}
-      @keyframes press{0%,8%,18%,100%{transform:translateY(0)}11%,14%{transform:translateY(9px)}}
-      .side{transform-box:fill-box;transform-origin:bottom;animation:side 3.6s infinite;animation-delay:${i * 1.2}s}
-      @keyframes side{0%,8%,18%,100%{transform:scaleY(1)}11%,14%{transform:scaleY(.25)}}
-      .flash{opacity:0;animation:flash 3.6s infinite;animation-delay:${i * 1.2}s}
-      @keyframes flash{0%,9%,30%,100%{opacity:0}12%{opacity:1}}
-      .tag{animation:pulse 2s ease-in-out infinite}`;
-    const body = `<defs>
-        <radialGradient id="dome" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="${light}"/><stop offset=".45" stop-color="${c}"/><stop offset="1" stop-color="${dark}"/></radialGradient>
-        <radialGradient id="fl"><stop offset=".4" stop-color="${c}" stop-opacity=".9"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>
-        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#140a24"/><stop offset="1" stop-color="#07030d"/></linearGradient>
-        ${GLOW("g", 3)}
-      </defs>
-      <rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="url(#bg)" stroke="#2c1450" stroke-width="1.5"/>
-      <rect x="14" y="14" width="34" height="20" rx="10" fill="${c}" class="tag"/><text x="31" y="28" text-anchor="middle" font-family="${MONO}" font-size="11" font-weight="700" fill="#fff">${p}</text>
-      <use href="#ic" transform="translate(${W - 31} 24) scale(26)"/>
-      <ellipse cx="${CX}" cy="122" rx="86" ry="34" fill="url(#fl)" class="flash"/>
-      <ellipse cx="${CX}" cy="122" rx="74" ry="28" fill="#1a1a22" stroke="#3a3a48" stroke-width="2"/>
-      <ellipse cx="${CX}" cy="119" rx="62" ry="22" fill="#050507"/>
-      <rect x="${CX - 50}" y="100" width="100" height="18" fill="${dark}" class="side"/>
-      <g class="top">
-        <ellipse cx="${CX}" cy="100" rx="50" ry="19" fill="url(#dome)"/>
-        <ellipse cx="${CX - 14}" cy="92" rx="20" ry="6" fill="#fff" opacity=".35"/>
-      </g>
-      <text x="${CX}" y="174" text-anchor="middle" font-family="${MONO}" font-size="15" font-weight="700" letter-spacing="3" fill="#fff" filter="url(#g)">${esc(label)}</text>
-      <text x="${CX}" y="193" text-anchor="middle" font-family="${MONO}" font-size="10.5" fill="#a1a1aa">${esc(sub)}</text>`;
-    const withIcon = body.replace("<defs>", `<defs><image id="ic" x="-.5" y="-.5" width="1" height="1" href="${icon64(iconName)}"/>`);
-    write(`btn-${id}.svg`, svg(W, H, withIcon, style, label));
-  });
-}
-
-/* ───────────────────────────── RODAPÉ ───────────────────────────── */
-function footer() {
-  const W = 900, H = 250, HZ = 168, CX = 450;
-  const rand = rng(99);
-  const g = grid({ id: "f", w: W, top: HZ, bottom: H, vx: CX, spacing: 60, lines: 7, dur: 3 });
-  const T = 14;
-  const pc = (s) => n((s / T) * 100);
-  const digits = Array.from({ length: 10 }, (_, i) => 9 - i);
-  const style = `${BASE_STYLE}${g.style}
-    .dg{opacity:0;animation:dg ${T}s infinite both}
-    @keyframes dg{0%{opacity:0;transform:scale(1.4)}${pc(0.08)}%{opacity:1;transform:scale(1)}${pc(0.9)}%{opacity:1}${pc(1)}%,100%{opacity:0}}
-    .dg{transform-box:fill-box;transform-origin:center}
-    .cont{animation:cont ${T}s infinite both}
-    @keyframes cont{0%,${pc(10)}%{opacity:1}${pc(10.2)}%,100%{opacity:0}}
-    .thx{opacity:0;animation:thx ${T}s infinite both;transform-box:fill-box;transform-origin:center}
-    @keyframes thx{0%,${pc(10)}%{opacity:0;transform:scale(.6)}${pc(10.6)}%,${pc(13.6)}%{opacity:1;transform:scale(1)}100%{opacity:0}}
-    .coin{animation:blink 1s steps(1) infinite}`;
-  const body = `<defs>
-      <clipPath id="frame"><rect width="${W}" height="${H}" rx="20"/></clipPath>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05010c"/><stop offset=".62" stop-color="#2a0845"/><stop offset=".67" stop-color="#08010f"/></linearGradient>
-      <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000" opacity=".25"/></pattern>
-      ${GLOW("glow", 3)}${GLOW("glowBig", 8)}
+  const fy = py + pH + 32, fw = (W - 64 - 3 * 16) / 4, fh = H - fy - 76;
+  const featSvg = feats.map(([t, d], i) => {
+    const x = 32 + i * (fw + 16);
+    return `<rect x="${n(x)}" y="${fy}" width="${n(fw)}" height="${n(fh)}" rx="18" fill="${C.surface2}" stroke="${C.line}"/>
+      <text x="${n(x + 22)}" y="${fy + 38}" class="m" font-size="14" fill="${C.accent}">0${i + 1}</text>
+      <text x="${n(x + 22)}" y="${fy + 74}" class="s" font-size="20" font-weight="600" fill="${C.ink}">${esc(t)}</text>
+      ${lines(wrap(d, fw - 44, 16.5), n(x + 22), fy + 104, 24, `class="s" font-size="16.5" fill="${C.muted}"`)}`;
+  }).join("");
+  const body = `
+    <defs>${GRADS}
+      <clipPath id="pc"><rect x="${px}" y="${py}" width="${pW}" height="${pH}" rx="18"/></clipPath>
+      <clipPath id="frame"><rect width="${W}" height="${H}" rx="28"/></clipPath>
     </defs>
     <g clip-path="url(#frame)">
-      <rect width="${W}" height="${H}" fill="url(#sky)"/>
-      ${stars(rand, 60, W, HZ - 10)}
-      ${g.body}
-      <line x1="0" x2="${W}" y1="${HZ}" y2="${HZ}" stroke="#f0abfc" stroke-width="2" filter="url(#glow)"/>
-      <g class="cont">
-        <text x="${CX - 40}" y="96" text-anchor="middle" font-family="${DISPLAY}" font-weight="900" font-size="40" letter-spacing="4" fill="#ff2e97" filter="url(#glowBig)">CONTINUE?</text>
-      </g>
-      ${digits.map((d, i) => `<text x="${CX + 150}" y="102" text-anchor="middle" font-family="${DISPLAY}" font-weight="900" font-size="58" fill="#fde047" filter="url(#glow)" class="dg" style="animation-delay:${i}s">${d}</text>`).join("")}
-      <text x="${CX}" y="98" text-anchor="middle" font-family="${DISPLAY}" font-weight="900" font-size="34" letter-spacing="3" fill="#67e8f9" filter="url(#glowBig)" class="thx">OBRIGADO POR JOGAR!</text>
-      <text x="${CX}" y="140" text-anchor="middle" font-family="${MONO}" font-size="13" font-weight="700" letter-spacing="6" fill="#fde047" class="coin">INSERT COIN</text>
-      <text x="${CX}" y="236" text-anchor="middle" font-family="${MONO}" font-size="10.5" letter-spacing="3" fill="#f5d0fe" opacity=".85">© 2026 ROBSON RODRIGUES · FEITO COM CÓDIGO E CAFÉ</text>
-      <rect width="${W}" height="${H}" fill="url(#scan)"/>
+      <rect width="${W}" height="${H}" fill="${C.surface}"/>
+      <circle class="au" cx="${W - 120}" cy="80" r="300" fill="url(#au1)"/>
+      <g clip-path="url(#pc)"><image href="${webp("candidarte-poster.webp")}" x="${px}" y="${py}" width="${pW}" height="${pH}"/></g>
+      <rect x="${px + 0.5}" y="${py + 0.5}" width="${pW - 1}" height="${pH - 1}" rx="17.5" stroke="${C.lineStrong}"/>
+      <!-- botão de play decorativo, como no vídeo do site -->
+      <circle cx="${px + pW / 2}" cy="${py + pH / 2}" r="34" fill="rgba(10,7,16,0.7)" stroke="rgba(255,255,255,0.3)"/>
+      <path d="M${px + pW / 2 - 9} ${py + pH / 2 - 14}v28l23-14Z" fill="#fff"/>
+
+      <rect x="${rx}" y="${py + 8}" width="126" height="32" rx="16" fill="rgba(168,121,255,0.14)" stroke="rgba(168,121,255,0.4)"/>
+      <circle class="pulse" cx="${rx + 18}" cy="${py + 24}" r="4" fill="${C.accent}"/>
+      <circle cx="${rx + 18}" cy="${py + 24}" r="4" fill="${C.accent}"/>
+      <text x="${rx + 30}" y="${py + 29}" class="s" font-size="14" font-weight="600" fill="${C.accent}">Coming soon</text>
+      <text x="${rx}" y="${py + 98}" class="s" font-size="46" font-weight="600" letter-spacing="-1.8" fill="url(#tg)">Candidarte</text>
+      ${lines(wrap("The product I'm building right now.", rw, 22), rx, py + 142, 30, `class="s" font-size="22" font-weight="500" fill="${C.ink}"`)}
+      ${lines(text, rx, py + 186, 30, `class="s" font-size="20" fill="${C.muted}"`)}
+      <text x="${rx}" y="${py + pH - 6}" class="m" font-size="14" fill="${C.muted}">A product by RDL Development</text>
+      ${featSvg}
+      <text x="32" y="${H - 34}" class="m" font-size="15" fill="${C.muted}"><tspan fill="${C.accent}">✓ </tspan>70 unit tests and 50 end-to-end tests running in CI · Next.js 16 · Fastify · PostgreSQL · Gemini</text>
     </g>
-    <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" stroke="#7f2ccb" stroke-opacity=".6" stroke-width="1.5"/>`;
-  write("footer.svg", svg(W, H, body, style, "Obrigado por jogar!"));
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="27.5" stroke="${C.line}"/>`;
+  const css = `${AURORA_CSS}
+    .pulse{animation:pulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+    @keyframes pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(3);opacity:0}}`;
+  write("candidarte.svg", svg(W, H, body, { title: "Candidarte — an AI-powered job application tracker. Coming soon.", css }));
+}
+
+// ───────────────────────────── Serviços ─────────────────────────────
+function services() {
+  const items = [
+    ["Landing pages and websites", "Pages that load fast, rank on Google and turn visitors into leads."],
+    ["Web products", "Dashboards, SaaS and custom tools, from prototype to production, built with React, Next.js and Node."],
+    ["Performance and SEO", "Core Web Vitals audits and fixes. My latest site scores 100 on PageSpeed."],
+    ["Interfaces with motion", "Motion that guides the eye and adds personality, without slowing the page down or ignoring people who prefer less motion."],
+  ];
+  // ícones simples no traço do Phosphor
+  const icons = [
+    `<rect x="2" y="4" width="24" height="18" rx="3"/><path d="M2 9h24M6 6.5h.01M9 6.5h.01"/>`,
+    `<rect x="3" y="3" width="9" height="9" rx="2"/><rect x="16" y="3" width="9" height="9" rx="2"/><rect x="3" y="16" width="9" height="9" rx="2"/><rect x="16" y="16" width="9" height="9" rx="2"/>`,
+    `<path d="M3 21a11 11 0 1 1 22 0"/><path d="m14 21 5-7"/>`,
+    `<path d="M4 20c4-12 8-12 10-6s6 6 10-6"/><circle cx="24" cy="8" r="2"/>`,
+  ];
+  const W = 1200, cw = 592, ch = 220, gap = 16;
+  const H = ch * 2 + gap;
+  const body = items.map(([t, d], i) => {
+    const x = (i % 2) * (cw + gap), y = Math.floor(i / 2) * (ch + gap);
+    return `<rect x="${x + 0.5}" y="${y + 0.5}" width="${cw - 1}" height="${ch - 1}" rx="22" fill="${C.surface}" stroke="${C.line}"/>
+      <rect x="${x + 28}" y="${y + 28}" width="52" height="52" rx="14" fill="rgba(168,121,255,0.12)" stroke="rgba(168,121,255,0.3)"/>
+      <g transform="translate(${x + 40} ${y + 40})" stroke="${C.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">${icons[i]}</g>
+      <text x="${x + cw - 28}" y="${y + 56}" text-anchor="end" class="m" font-size="14" fill="${C.muted}">0${i + 1}</text>
+      <text x="${x + 28}" y="${y + 122}" class="s" font-size="25" font-weight="600" letter-spacing="-0.6" fill="${C.ink}">${esc(t)}</text>
+      ${lines(wrap(d, cw - 56, 18.5), x + 28, y + 156, 27, `class="s" font-size="18.5" fill="${C.muted}"`)}`;
+  }).join("");
+  write("services.svg", svg(W, H, body, { title: "Services: landing pages and websites, web products, performance and SEO, interfaces with motion" }));
+}
+
+// ───────────────────────────── Stack (faixa rolando) ─────────────────────────────
+function stack() {
+  const icons = JSON.parse(readFileSync(join(SRC, "stack-icons.json"), "utf8"));
+  const W = 1200, H = 84, fs = 18, gap = 52;
+  let x = 0, row = "";
+  for (const [name, paths] of Object.entries(icons)) {
+    row += `<g transform="translate(${n(x)} 30) scale(1)" fill="${C.muted}">${paths.map((d) => `<path d="${d}"/>`).join("")}</g>`;
+    row += `<text x="${n(x + 34)}" y="48" class="s" font-size="${fs}" font-weight="500" fill="${C.muted}">${esc(name)}</text>`;
+    x += 34 + textWidth(name, fs) + gap;
+  }
+  const RW = n(x);
+  const body = `
+    <defs>
+      <linearGradient id="fl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.bg}"/><stop offset="1" stop-color="${C.bg}" stop-opacity="0"/></linearGradient>
+      <linearGradient id="fr" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="${C.bg}"/><stop offset="1" stop-color="${C.bg}" stop-opacity="0"/></linearGradient>
+      <clipPath id="cp"><rect width="${W}" height="${H}" rx="20"/></clipPath>
+    </defs>
+    <g clip-path="url(#cp)">
+      <rect width="${W}" height="${H}" fill="${C.bg}"/>
+      <g class="mq"><g transform="translate(24 0)">${row}</g><g transform="translate(${n(24 + RW)} 0)">${row}</g></g>
+      <rect width="140" height="${H}" fill="url(#fl)"/>
+      <rect x="${W - 140}" width="140" height="${H}" fill="url(#fr)"/>
+    </g>
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="19.5" stroke="${C.line}"/>`;
+  const css = `.mq{animation:mq 45s linear infinite}@keyframes mq{to{transform:translateX(-${RW}px)}}`;
+  write("stack.svg", svg(W, H, body, { title: `Everyday tools: ${Object.keys(icons).join(", ")}`, css, mono: false }));
+}
+
+// ───────────────────────────── Sobre ─────────────────────────────
+function about() {
+  // Painel escuro com respiro, para funcionar também no tema claro do GitHub.
+  const W = 1200, P = 36, IW = W - 2 * P;
+  const [rw, rh] = webpSize("robson-480.webp");
+  const phW = 380, phH = n((phW * rh) / rw);
+  const x = phW + 52, tw = IW - x;
+  const st = wrap("I got hooked on code tinkering with Counter-Strike 1.6 servers and never looked back. These days I live on the front-end: taking an idea, designing the interface and polishing it until every detail feels right.", tw, 27);
+  const tl = [
+    ["Age 12", "Built my first computer"],
+    ["2023", "Started my degree in Systems Analysis and Development at IFG"],
+    ["2025", "My capstone, Mind Health, was featured at IFG's first capstone showcase"],
+    ["2026", "Graduated in March and co-founded RDL Development in October"],
+  ];
+  const ty = 30 + st.length * 38 + 34;
+  let rows = "", y = ty;
+  for (const [yr, t] of tl) {
+    const tlines = wrap(t, tw - 130, 19);
+    const hgt = 30 + tlines.length * 26;
+    rows += `<line x1="${x}" x2="${IW}" y1="${y}" y2="${y}" stroke="${C.line}"/>
+      <text x="${x}" y="${y + 37}" class="m" font-size="15" fill="${C.accent}">${esc(yr)}</text>
+      ${lines(tlines, x + 120, y + 37, 26, `class="s" font-size="19" fill="${C.ink}"`)}`;
+    y += hgt;
+  }
+  const H = Math.max(phH, y + 4) + 2 * P;
+  const body = `
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="27.5" fill="${C.surface}" stroke="${C.line}"/>
+    <g transform="translate(${P} ${P})">
+    <defs><clipPath id="ph"><rect width="${phW}" height="${phH}" rx="24"/></clipPath>
+      <linearGradient id="pf" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="${C.v2}" stop-opacity="0"/><stop offset="1" stop-color="${C.v2}" stop-opacity=".3"/></linearGradient></defs>
+    <g clip-path="url(#ph)">
+      <image href="${webp("robson-480.webp")}" width="${phW}" height="${phH}"/>
+      <rect width="${phW}" height="${phH}" fill="url(#pf)"/>
+    </g>
+    <rect x=".5" y=".5" width="${phW - 1}" height="${phH - 1}" rx="23.5" stroke="${C.lineStrong}"/>
+    <g transform="translate(20 ${phH - 56})">
+      <rect width="170" height="36" rx="18" fill="rgba(10,7,16,0.75)" stroke="${C.lineStrong}"/>
+      <path d="M22 11a6 6 0 0 0-6 6c0 4.5 6 9 6 9s6-4.5 6-9a6 6 0 0 0-6-6Z" stroke="${C.accent}" stroke-width="1.8" fill="none" transform="translate(-2 -2)"/>
+      <text x="36" y="23" class="s" font-size="14" font-weight="600" fill="${C.ink}">Brasília, Brazil</text>
+    </g>
+    ${lines(st, x, 34, 38, `class="s" font-size="27" font-weight="500" letter-spacing="-0.6" fill="${C.ink}"`)}
+    ${rows}
+    <line x1="${x}" x2="${IW}" y1="${y}" y2="${y}" stroke="${C.line}"/>
+    </g>`;
+  write("about.svg", svg(W, H, body, { title: "About me: from Counter-Strike 1.6 servers to front-end development. Timeline: first computer at 12, IFG in 2023, capstone featured in 2025, graduated and co-founded RDL Development in 2026." }));
+}
+
+// ───────────────────────────── RDL ─────────────────────────────
+function rdl() {
+  const W = 1200, H = 230;
+  const wm = readFileSync(join(SRC, "rdl-wordmark.svg"), "utf8");
+  const wmH = 96, wmW = n((699 / 309) * wmH);
+  const tx = 48 + wmW + 56;
+  const t = wrap("I also co-founded RDL Development with Daniel Maciel and Luiz Henrique. When a project needs a full team, covering back-end, security and automation, we take it on together.", W - tx - 48, 21);
+  const body = `
+    <defs>${GRADS}<clipPath id="f"><rect width="${W}" height="${H}" rx="24"/></clipPath></defs>
+    <g clip-path="url(#f)">
+      <rect width="${W}" height="${H}" fill="${C.surface}"/>
+      <circle class="au" cx="120" cy="${H}" r="260" fill="url(#au1)"/>
+      <image href="data:image/svg+xml;base64,${Buffer.from(wm).toString("base64")}" x="48" y="${(H - wmH) / 2}" width="${wmW}" height="${wmH}"/>
+      <line x1="${tx - 28}" x2="${tx - 28}" y1="48" y2="${H - 48}" stroke="${C.line}"/>
+      ${lines(t, tx, 62, 31, `class="s" font-size="21" fill="${C.muted}"`)}
+      <g transform="translate(${tx} ${62 + t.length * 31 - 4})">
+        <rect width="142" height="40" rx="20" fill="${C.surface2}" stroke="${C.lineStrong}"/>
+        <text x="18" y="25.5" class="s" font-size="15" font-weight="600" fill="${C.ink}">Meet RDL</text>
+        ${ARROW_UR(108, 14, 0.9, C.accent)}
+      </g>
+    </g>
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="23.5" stroke="${C.line}"/>`;
+  write("rdl.svg", svg(W, H, body, { title: "RDL Development — the studio I co-founded with Daniel Maciel and Luiz Henrique", css: AURORA_CSS, mono: false }));
+}
+
+// ───────────────────────────── Contato ─────────────────────────────
+function contact() {
+  const W = 1200, H = 300;
+  const body = `
+    <defs>${GRADS}<clipPath id="f"><rect width="${W}" height="${H}" rx="28"/></clipPath></defs>
+    <g clip-path="url(#f)">
+      <rect width="${W}" height="${H}" fill="${C.surface}"/>
+      <circle class="au" cx="260" cy="40" r="320" fill="url(#au1)"/>
+      <circle class="au au2" cx="980" cy="280" r="300" fill="url(#au2)"/>
+      <text x="${W / 2}" y="${H / 2 - 4}" text-anchor="middle" class="s" font-size="62" font-weight="600" letter-spacing="-2.6"><tspan fill="url(#tg)">Got a project </tspan><tspan fill="url(#vg)">in mind?</tspan></text>
+      <text x="${W / 2}" y="${H / 2 + 50}" text-anchor="middle" class="s" font-size="21" fill="${C.muted}">Tell me what you need. I usually reply within 24 hours, in English or Portuguese.</text>
+    </g>
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="27.5" stroke="${C.line}"/>`;
+  write("contact.svg", svg(W, H, body, { title: "Got a project in mind? Tell me what you need.", css: AURORA_CSS, mono: false }));
+}
+
+// ───────────────────────────── Rodapé ─────────────────────────────
+function footer() {
+  const W = 1200, H = 290;
+  const body = `
+    <defs>
+      <linearGradient id="big" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgb(168,121,255)" stop-opacity=".4"/><stop offset="1" stop-color="rgb(168,121,255)" stop-opacity=".03"/></linearGradient>
+      <linearGradient id="gl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="rgb(122,43,240)" stop-opacity=".25"/><stop offset="1" stop-color="rgb(122,43,240)" stop-opacity="0"/></linearGradient>
+      <clipPath id="f"><rect width="${W}" height="${H}" rx="28"/></clipPath>
+    </defs>
+    <g clip-path="url(#f)">
+      <rect width="${W}" height="${H}" fill="${C.bg}"/>
+      ${logo("fl", 36, 30, 30)}
+      <text x="80" y="51" class="s" font-size="16" fill="${C.muted}">© 2026 Robson Rodrigues. Made in Brasília.</text>
+      <text x="${W - 36}" y="51" text-anchor="end" class="s" font-size="16" fill="${C.muted}">Thanks for stopping by ✦</text>
+      <text class="rise s" x="${W / 2}" y="${H + 30}" text-anchor="middle" font-size="262" font-weight="800" letter-spacing="-16" fill="url(#big)">ROBSON</text>
+      <rect y="${H - 100}" width="${W}" height="100" fill="url(#gl)"/>
+    </g>
+    <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="27.5" stroke="${C.line}"/>`;
+  const css = `.rise{animation:rise 1.6s cubic-bezier(.23,1,.32,1) both}@keyframes rise{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}`;
+  write("footer.svg", svg(W, H, body, { title: "© 2026 Robson Rodrigues", css, mono: false }));
 }
 
 hero();
-navButtons();
-titles();
-terminal();
-achievements();
-featured({ file: "featured-gabriela.svg", url: "gabrieladecoracoes.com.br", desk: "gab-d.jpg", deskH: 3080, mob: "gab-m.jpg", mobH: 4464, click: [350, 332],
-  chips: ["React", "TypeScript", "Vite", "Tailwind", "shadcn/ui", "Vercel"], rank: "LENDÁRIO", title: "Gabriela Decorações — site no ar, versão desktop e mobile" });
-featured({ file: "featured-rdl.svg", url: "rdldevelopment.dev", desk: "rdl-d.jpg", deskH: 2916, mob: "rdl-m.jpg", mobH: 4464, click: [245, 324],
-  chips: ["Next.js", "TypeScript", "Tailwind", "Vercel", "SEO", "Web Vitals"], rank: "FUNDADOR", title: "RDL Development — site da startup no ar, versão desktop e mobile" });
-party();
-cards();
-orbit();
-arcade();
+button("portfolio", "Visit my portfolio", { primary: true });
+button("talk", "Let's talk", { primary: true });
+button("linkedin", "LinkedIn");
+button("resume", "Download résumé");
+button("rdl", "RDL Development");
+sectionTitle("work", "01", "Work", "Selected work", "Client sites, products of my own and side projects, all built for speed and polish.");
+sectionTitle("building", "02", "Now building", "What I'm building now", "");
+sectionTitle("services", "03", "Services", "How I can help", "I work solo or with the RDL team, from the first sketch to launch. Happy to work in English or Portuguese.");
+sectionTitle("about", "04", "About", "About me", "");
+sectionTitle("stats", "05", "GitHub", "On GitHub", "");
+sectionTitle("contact", "06", "Contact", "Let's work together", "");
+PROJECTS.forEach(projectCard);
+candidarte();
+services();
+stack();
+about();
+rdl();
+contact();
 footer();
-
-/* ───────────────────────────── PARTY RDL ───────────────────────────── */
-function party() {
-  const W = 900, H = 262;
-  const members = [
-    ["R", "ROBSON", "P1", "#a855f7", "Full stack · foco em front-end", "React · Next.js · NestJS · Postgres"],
-    ["D", "DANIEL", "P2", "#22d3ee", "Full stack · back-end e segurança", "Node.js · Auth · OWASP"],
-    ["L", "LUIZ", "P3", "#f472b6", "Automação e integrações", "Chatbots · APIs · PHP · React Native"],
-  ];
-  const STEP = 2.4, T = STEP * 3, p = (x) => n((x / T) * 100);
-  const style = `${BASE_STYLE}
-    .sel{opacity:0;animation:sel ${T}s infinite both}
-    @keyframes sel{0%{opacity:0}${p(0.2)}%,${p(STEP - 0.2)}%{opacity:1}${p(STEP)}%,100%{opacity:0}}
-    .ltr{animation:pulse 2.4s ease-in-out infinite}
-    .hex{transform-box:fill-box;transform-origin:center;animation:spin 12s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .ready{animation:blink 1.2s steps(1) infinite}
-    .fill{transform-box:fill-box;transform-origin:left;animation:fill 3s cubic-bezier(.3,.7,.2,1) infinite alternate}
-    @keyframes fill{from{transform:scaleX(.15)}to{transform:scaleX(1)}}`;
-  const cards = members.map(([ch, name, tag, c, cls, stack], i) => {
-    const x = 24 + i * 290, y = 52, w = 272, h = 186, cx = x + 62, cy = y + 74;
-    return `<g>
-      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="#0f0a1c" stroke="#2c1a45" stroke-width="1.5"/>
-      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" stroke="${c}" stroke-width="2.5" filter="url(#gl)" class="sel" style="animation-delay:${n(i * STEP)}s"/>
-      <rect x="${x + 14}" y="${y + 14}" width="30" height="18" rx="9" fill="${c}"/><text x="${x + 29}" y="${y + 27}" text-anchor="middle" font-family="${MONO}" font-size="10.5" font-weight="700" fill="#0b0614">${tag}</text>
-      <text x="${x + w - 16}" y="${y + 28}" text-anchor="end" font-family="${MONO}" font-size="10" font-weight="700" letter-spacing="2" fill="#4ade80" class="ready" style="animation-delay:${n(i * 0.3)}s">PRONTO</text>
-      <polygon points="${[0, 1, 2, 3, 4, 5].map((k) => `${n(cx + 40 * Math.cos((Math.PI / 3) * k - Math.PI / 2))},${n(cy + 40 * Math.sin((Math.PI / 3) * k - Math.PI / 2))}`).join(" ")}" fill="#160d28" stroke="${c}" stroke-opacity=".5" stroke-width="1.5"/>
-      <circle cx="${cx}" cy="${cy}" r="48" stroke="${c}" stroke-opacity=".6" stroke-dasharray="6 9" class="hex" style="animation-duration:${10 + i * 3}s"/>
-      <text x="${cx}" y="${cy + 17}" text-anchor="middle" font-family="${DISPLAY}" font-weight="900" font-size="46" fill="${c}" filter="url(#glBig)" class="ltr" style="animation-delay:${n(i * 0.8)}s">${ch}</text>
-      <text x="${x + 124}" y="${y + 66}" font-family="${DISPLAY}" font-weight="900" font-size="20" letter-spacing="1.5" fill="#fff">${name}</text>
-      <text x="${x + 124}" y="${y + 86}" font-family="${SANS}" font-size="11.5" fill="#c4b5fd">${esc(cls.split(" · ")[0])}</text>
-      <text x="${x + 124}" y="${y + 101}" font-family="${SANS}" font-size="11.5" fill="#a1a1aa">${esc(cls.split(" · ")[1] || "")}</text>
-      <text x="${x + 16}" y="${y + 146}" font-family="${MONO}" font-size="10.5" fill="#d8b4fe">${esc(stack)}</text>
-      <rect x="${x + 16}" y="${y + 160}" width="${w - 32}" height="6" rx="3" fill="#1f1530"/>
-      <rect x="${x + 16}" y="${y + 160}" width="${w - 32}" height="6" rx="3" fill="${c}" class="fill" style="animation-delay:${n(i * 0.5)}s"/>
-    </g>`;
-  }).join("");
-  const body = `<defs>${GLOW("gl", 4)}${GLOW("glBig", 6)}
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#150828"/><stop offset="1" stop-color="#07030d"/></linearGradient></defs>
-    <rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="19.5" fill="url(#bg)" stroke="#7f2ccb" stroke-opacity=".6" stroke-width="1.5"/>
-    <text x="26" y="34" font-family="${MONO}" font-size="12" font-weight="700" letter-spacing="3" fill="#e9d5ff">PARTY · <tspan fill="#fff">RDL DEVELOPMENT</tspan></text>
-    <text x="${W - 26}" y="34" text-anchor="end" font-family="${MONO}" font-size="11.5" letter-spacing="2.5" fill="#4ade80">3/3 JOGADORES PRONTOS <tspan class="blink">▶</tspan></text>
-    ${cards}`;
-  write("rdl-party.svg", svg(W, H, body, style, "Party RDL Development: Robson, Daniel e Luiz"));
-}

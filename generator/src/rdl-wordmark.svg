@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 699 309" width="699" height="309" role="img" aria-label="RDL Development">
+  <path fill="#EEFDFF" fill-rule="evenodd" d="M0 0H140A73.5 73.5 0 0 1 140 147H42V218H0ZM42 38V109H140A35.5 35.5 0 0 0 140 38ZM477 74A74 74 0 0 0 403 0H254V218H403A74 74 0 0 0 477 144H439A36 36 0 0 1 403 180H296V38H403A36 36 0 0 1 439 74ZM558 0H598L524.6 218H484.6ZM559 181H699V218H546.5Z"/>
+  <path fill="#EEFDFF" d="M104.6 120H152.6L223 218H175Z"/>
+  <path fill="#A0BDC2" d="M327 90.5H345.5L369 109L345.5 127.5H327L350.5 109ZM381 90.5H399.5L423 109L399.5 127.5H381L404.5 109ZM435 90.5H453.5L477 109L453.5 127.5H435L458.5 109Z"/>
+  <text x="0" y="309" fill="#A0BDC2" font-family="Montserrat, sans-serif" font-weight="400" font-size="63" textLength="699" lengthAdjust="spacing">DEVELOPMENT</text>
+</svg>

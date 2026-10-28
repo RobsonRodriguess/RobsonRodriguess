@@ -1,191 +1,101 @@
-<div align="center">
+<a href="https://meu-portfolio-robsonrodrigues.vercel.app/">
+  <img src="./assets/hero.svg" width="100%" alt="Robson Rodrigues — Websites and products that sell for you. I'm a front-end developer from Brazil building fast, accessible, great-looking interfaces for clients around the world." />
+</a>
 
-<img src="./assets/hero.svg" width="100%" alt="ROBSON RODRIGUES — Full Stack Developer · Press Start" />
+<p>
+  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/"><img src="./assets/btn-portfolio.svg" height="44" alt="Visit my portfolio" /></a>&nbsp;
+  <a href="https://www.linkedin.com/in/robson-rodrigues-dev/"><img src="./assets/btn-linkedin.svg" height="44" alt="LinkedIn" /></a>&nbsp;
+  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/resume-robson-rodrigues.pdf"><img src="./assets/btn-resume.svg" height="44" alt="Download résumé" /></a>
+</p>
 
-<a href="#sobre"><img src="./assets/nav-sobre.svg" width="150" alt="01 Sobre" /></a>
-<a href="#startup"><img src="./assets/nav-startup.svg" width="150" alt="02 Startup" /></a>
-<a href="#projetos"><img src="./assets/nav-projetos.svg" width="150" alt="03 Projetos" /></a>
-<br/>
-<a href="#arsenal"><img src="./assets/nav-arsenal.svg" width="150" alt="04 Arsenal" /></a>
-<a href="#placar"><img src="./assets/nav-placar.svg" width="150" alt="05 Placar" /></a>
-<a href="#contato"><img src="./assets/nav-contato.svg" width="150" alt="06 Contato" /></a>
-
-</div>
-
-<br/>
-
-<a id="sobre" name="sobre"></a>
-<img src="./assets/title-sobre.svg" width="100%" alt="01 // Sobre mim" />
-
-<img src="./assets/terminal.svg" width="100%" alt="Terminal: whoami — Robson Rodrigues, Full Stack Developer em Brasília-DF. Crio produtos digitais completos, do front-end animado ao back-end seguro." />
-
-<img src="./assets/achievements.svg" width="100%" alt="Conquistas desbloqueadas: formado em ADS no IFG, primeiro site de cliente no ar, Pix automático em produção, TCC defendido, jogo feito com IA, primeiro PC aos 12." />
+<img src="./assets/stack.svg" width="100%" alt="Everyday tools: React, Next.js, TypeScript, Tailwind CSS, Framer Motion, Vite, Node.js, Fastify, NestJS, PostgreSQL, Supabase, Docker, Vercel, Cloudflare, Gemini, Figma, Git" />
 
 <details>
-<summary><b>📄 Ler em modo texto</b></summary>
+<summary>🇧🇷 <b>Em português</b></summary>
 <br/>
 
-Sou desenvolvedor **Full Stack** focado em criar **produtos digitais completos**: do front-end moderno e animado até back-end seguro, pagamentos, autenticação e painéis administrativos. Gosto de projeto que **sai do papel e vai pro ar**.
+Sou **Robson Rodrigues**, desenvolvedor front-end em **Brasília**. Faço sites e produtos web rápidos, acessíveis e bonitos com React e Next.js, para clientes no Brasil e no exterior. Também sou cofundador da **[RDL Development](https://rdldevelopment.dev)**, com Daniel Maciel e Luiz Henrique.
 
-- 🎓 **Análise e Desenvolvimento de Sistemas — IFG**
-- 🔭 Hoje: sites para clientes e o **Simula SISU 2026**
-- 🧩 Arquitetura, segurança e performance
-- 📍 **Brasília, DF** — aberto a projetos remotos e freelas
+- 🎓 Formado em Análise e Desenvolvimento de Sistemas no **IFG** (2026)
+- 🚀 Construindo agora: **Candidarte**, um painel de candidaturas de emprego com IA
+- 💬 Atendo em português e inglês e respondo em até 24 horas
+
+👉 [Ver o portfólio em português](https://meu-portfolio-robsonrodrigues.vercel.app/pt)
 
 </details>
 
 <br/>
 
-<a id="startup" name="startup"></a>
-<img src="./assets/title-startup.svg" width="100%" alt="02 // Minha startup — RDL Development" />
+<img src="./assets/title-work.svg" width="100%" alt="01 — Selected work" />
+
+<p>
+  <a href="https://simula-sisu.vercel.app"><img src="./assets/card-simula-sisu.svg" width="49%" alt="Simula Sisu — a simulator for Brazil's university admissions. Next.js, Express, Prisma, PostgreSQL." /></a>
+  <a href="https://www.gabrieladecoracoes.com.br/"><img src="./assets/card-gabriela.svg" width="49%" alt="Gabriela Decorações — landing page for a curtain and blinds company. React, TypeScript, Vite, Tailwind." /></a>
+  <a href="https://shineditor.vercel.app"><img src="./assets/card-shine.svg" width="49%" alt="Shinê Editor — portfolio for a YouTube video editor, 100 on PageSpeed. React 19, Vite, i18n." /></a>
+  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/#projetos"><img src="./assets/card-clinica.svg" width="49%" alt="Clínica Araújo — website for a dental clinic, launching soon. React, Vite, Tailwind, Framer Motion." /></a>
+  <a href="https://rdldevelopment.dev"><img src="./assets/card-rdl.svg" width="49%" alt="RDL Development — website for our dev studio. Next.js 16, Tailwind 4." /></a>
+  <a href="https://candangos-shop.vercel.app/"><img src="./assets/card-candangos.svg" width="49%" alt="Candangos Shop — online store for a Hytale gaming guild with Pix payments. React, Supabase, Edge Functions." /></a>
+  <a href="https://github.com/RobsonRodriguess/Mind-Health"><img src="./assets/card-mind-health.svg" width="49%" alt="Mind Health — mental health platform, my college capstone. React, Node.js, RBAC." /></a>
+  <a href="https://github.com/RobsonRodriguess/aviator-clone-pro"><img src="./assets/card-aviator.svg" width="49%" alt="Aviator Clone Pro — real-time game simulator at 60 FPS. React 19, JavaScript." /></a>
+</p>
+
+<br/>
+
+<img src="./assets/title-building.svg" width="100%" alt="02 — What I'm building now" />
+
+<a href="https://meu-portfolio-robsonrodrigues.vercel.app/#candidarte">
+  <img src="./assets/candidarte.svg" width="100%" alt="Candidarte, coming soon: a dashboard that keeps your job hunt organized. Browser extension, résumé tuned per job, daily watch and your numbers. 70 unit tests and 50 end-to-end tests running in CI." />
+</a>
+
+<br/><br/>
+
+<img src="./assets/title-services.svg" width="100%" alt="03 — How I can help" />
+
+<img src="./assets/services.svg" width="100%" alt="Landing pages and websites · Web products · Performance and SEO · Interfaces with motion" />
+
+<br/><br/>
+
+<img src="./assets/title-about.svg" width="100%" alt="04 — About me" />
+
+<img src="./assets/about.svg" width="100%" alt="I got hooked on code tinkering with Counter-Strike 1.6 servers and never looked back. Age 12: built my first computer. 2023: started Systems Analysis and Development at IFG. 2025: my capstone, Mind Health, was featured at IFG's capstone showcase. 2026: graduated in March and co-founded RDL Development in October." />
+
+<br/><br/>
 
 <a href="https://rdldevelopment.dev">
-  <img src="./assets/featured-rdl.svg" width="100%" alt="Site da RDL Development rodando ao vivo num notebook e num celular" />
+  <img src="./assets/rdl.svg" width="100%" alt="I also co-founded RDL Development with Daniel Maciel and Luiz Henrique. Meet RDL." />
 </a>
 
-<img src="./assets/rdl-party.svg" width="100%" alt="Party RDL Development: Robson (full stack, front-end), Daniel (full stack, back-end e segurança) e Luiz (automação e integrações)" />
+<br/><br/>
 
-<div align="center">
-
-<a href="https://rdldevelopment.dev"><img src="https://img.shields.io/badge/rdldevelopment.dev-7F2CCB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="rdldevelopment.dev" /></a>
-
-</div>
-
-<details>
-<summary><b>🚀 Sobre a RDL Development</b></summary>
-<br/>
-
-> **Tiramos ideias do papel e colocamos no ar.**
-
-A **RDL Development** é a startup que fundei com o **Daniel** e o **Luiz**: criamos **sites, aplicativos e sistemas sob medida**, do planejamento à entrega. Cada projeto é liderado por quem mais domina o assunto, com o apoio dos outros dois do início ao fim.
-
-**Como trabalhamos:** conversa → proposta com escopo, prazo e preço por escrito → construção em ciclos curtos → no ar, com medição e suporte.
-
-**Projetos entregues pela RDL:** Gabriela Decorações · Candangos Shop · Simula SISU
-
-</details>
-
-<br/>
-
-<a id="projetos" name="projetos"></a>
-<img src="./assets/title-destaque.svg" width="100%" alt="03 // Projeto lendário" />
-
-<a href="https://www.gabrieladecoracoes.com.br/">
-  <img src="./assets/featured-gabriela.svg" width="100%" alt="Gabriela Decorações rodando ao vivo num notebook e num celular" />
-</a>
-
-<div align="center">
-
-<a href="https://www.gabrieladecoracoes.com.br/"><img src="https://img.shields.io/badge/Ver%20site%20no%20ar-7F2CCB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Ver site no ar" /></a>
-<a href="https://github.com/RobsonRodriguess/Gabriela-Decoracoes"><img src="https://img.shields.io/badge/C%C3%B3digo%20fonte-181717?style=for-the-badge&logo=github&logoColor=white" alt="Código fonte" /></a>
-
-</div>
-
-<details>
-<summary><b>📜 Detalhes da missão — Gabriela Decorações</b></summary>
-<br/>
-
-> Site **high-end** de uma empresa com **mais de 18 anos** no mercado de cortinas, persianas e decoração em Brasília. Feito para apresentar o portfólio da marca com elegância e transformar visita em orçamento pelo WhatsApp.
-
-* 🎨 **Visual premium:** hero em tela cheia, tipografia serifada e identidade alinhada à marca.
-* 🖼️ **Portfólio real:** galeria com mais de 20 projetos entregues pela empresa.
-* 💬 **Conversão:** CTAs de orçamento e botão flutuante direto para o WhatsApp.
-* 📱 **Responsivo:** layout pensado para celular, com hero próprio para mobile.
-* 📊 **Métricas:** Vercel Analytics + Speed Insights para acompanhar acessos e performance.
-
-**Stack:** React · TypeScript · Vite · Tailwind CSS · shadcn/ui · Vercel
-
-</details>
-
-<br/>
-
-<img src="./assets/title-colecao.svg" width="100%" alt="04 // Coleção de projetos" />
+<img src="./assets/title-stats.svg" width="100%" alt="05 — On GitHub" />
 
 <p align="center">
-  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/"><img src="./assets/card-portfolio.svg" width="48%" alt="Portfólio RobsonDev — Next.js 16, React 19, Tailwind v4" /></a>
-  <a href="https://github.com/RobsonRodriguess/Candangos-Shop"><img src="./assets/card-candangos.svg" width="48%" alt="Candangos Shop — React, Supabase, Edge Functions" /></a>
-  <img src="./assets/card-sisu.svg" width="48%" alt="Simula SISU 2026 — Next.js, Express, Prisma, PostgreSQL, Docker (privado)" />
-  <a href="https://github.com/RobsonRodriguess/aviator-clone-pro"><img src="./assets/card-aviator.svg" width="48%" alt="Aviator Clone Pro — Next.js, NestJS, Socket.io" /></a>
-  <a href="https://github.com/RobsonRodriguess/GunsAndDragons"><img src="./assets/card-guns.svg" width="48%" alt="Guns and Dragons — C++ e SFML 3.0" /></a>
-  <a href="https://github.com/RobsonRodriguess/Mind-Health"><img src="./assets/card-mindhealth.svg" width="48%" alt="Mind Health — TCC sobre saúde mental" /></a>
+  <img height="170" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&count_private=true&include_all_commits=true&bg_color=120d1c&title_color=a879ff&icon_color=b57cff&text_color=a097b4&border_color=1f1830&border_radius=18&rank_icon=github" alt="GitHub stats" />
+  <img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&langs_count=8&bg_color=120d1c&title_color=a879ff&text_color=a097b4&border_color=1f1830&border_radius=18" alt="Top languages" />
 </p>
-
-<br/>
-
-<a id="arsenal" name="arsenal"></a>
-<img src="./assets/title-arsenal.svg" width="100%" alt="05 // Arsenal" />
-
-<img src="./assets/stack-orbit.svg" width="100%" alt="Sistema orbital de stack: front-end (React, Next.js, TypeScript, JavaScript, Tailwind, Vite), back-end (Node.js, Express, NestJS, Prisma, Supabase, Spring, Laravel) e dados e infra (PostgreSQL, MySQL, MongoDB, Redis, Docker, Linux, Nginx, Vercel, Git, GitHub Actions)" />
-
-<details>
-<summary><b>🧰 Ver arsenal completo</b></summary>
-<br/>
-<div align="center">
-
-**Linguagens**<br/>
-<img src="https://skillicons.dev/icons?i=ts,js,java,c,cpp,python,lua&theme=dark" />
-
-**Front-end**<br/>
-<img src="https://skillicons.dev/icons?i=html,css,react,nextjs,vite,tailwind,figma&theme=dark" />
-
-**Back-end & Dados**<br/>
-<img src="https://skillicons.dev/icons?i=nodejs,express,nestjs,prisma,supabase,spring,laravel&theme=dark" /><br/>
-<img src="https://skillicons.dev/icons?i=postgres,mysql,mongodb,redis&theme=dark" />
-
-**Infra & DevOps**<br/>
-<img src="https://skillicons.dev/icons?i=docker,linux,nginx,vercel,git,githubactions&theme=dark" />
-
-</div>
-</details>
-
-<br/>
-
-<a id="placar" name="placar"></a>
-<img src="./assets/title-placar.svg" width="100%" alt="06 // Placar" />
-
-<div align="center">
-
-<img width="100%" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=RobsonRodriguess&theme=radical" />
-
-<img height="170" src="https://github-readme-stats.vercel.app/api?username=RobsonRodriguess&show_icons=true&count_private=true&include_all_commits=true&bg_color=0D1117&title_color=A855F7&icon_color=7F2CCB&text_color=C9D1D9&border_color=3B0A6B&rank_icon=github" />
-<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=RobsonRodriguess&layout=compact&langs_count=8&bg_color=0D1117&title_color=A855F7&text_color=C9D1D9&border_color=3B0A6B" />
-
-<img width="70%" src="https://streak-stats.demolab.com?user=RobsonRodriguess&background=0D1117&border=3B0A6B&ring=7F2CCB&fire=A855F7&currStreakLabel=A855F7&sideLabels=C9D1D9&currStreakNum=FFFFFF&sideNums=FFFFFF&dates=8B949E&locale=pt_BR" />
-
-<img src="https://komarev.com/ghpvc/?username=RobsonRodriguess&label=JOGADORES%20QUE%20PASSARAM%20AQUI&color=7F2CCB&style=for-the-badge" />
-
-</div>
-
-<br/>
-
-<a id="contato" name="contato"></a>
-<img src="./assets/title-contato.svg" width="100%" alt="07 // Multiplayer" />
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/robson-rodrigues-dev/"><img src="./assets/btn-linkedin.svg" width="200" alt="LinkedIn" /></a>
-  <a href="https://discord.com/users/409017051223556121"><img src="./assets/btn-discord.svg" width="200" alt="Discord" /></a>
-  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/"><img src="./assets/btn-portfolio.svg" width="200" alt="Portfólio" /></a>
+  <img width="70%" src="https://streak-stats.demolab.com?user=RobsonRodriguess&background=120d1c&border=1f1830&stroke=2a2140&ring=a879ff&fire=b57cff&currStreakLabel=a879ff&sideLabels=f2eefa&currStreakNum=f2eefa&sideNums=f2eefa&dates=a097b4&border_radius=18" alt="GitHub streak" />
 </p>
 
-<details>
-<summary>🕹️ <b>Não clique aqui.</b></summary>
-<br/>
-<p align="center">
-Ok... você clicou. 👀<br/><br/>
-<b>Código secreto desbloqueado:</b> <code>↑ ↑ ↓ ↓ ← → ← → B A</code><br/><br/>
-Fun fact: montei meu primeiro PC aos 12 anos e passava as tardes mexendo em servidor de CS 1.6.<br/>
-Foi ali que a programação virou o jogo principal. 🎮
-</p>
-</details>
-
-<br/>
-
-<div align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/RobsonRodriguess/RobsonRodriguess/output/github-contribution-grid-snake-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/RobsonRodriguess/RobsonRodriguess/output/github-contribution-grid-snake.svg">
-  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/RobsonRodriguess/RobsonRodriguess/output/github-contribution-grid-snake.svg">
+  <img width="100%" alt="Contribution graph being eaten by a snake" src="https://raw.githubusercontent.com/RobsonRodriguess/RobsonRodriguess/output/github-contribution-grid-snake.svg">
 </picture>
-</div>
 
-<img src="./assets/footer.svg" width="100%" alt="Continue? Obrigado por jogar! — © 2026 Robson Rodrigues" />
+<br/><br/>
+
+<img src="./assets/title-contact.svg" width="100%" alt="06 — Let's work together" />
+
+<a href="https://meu-portfolio-robsonrodrigues.vercel.app/#contato">
+  <img src="./assets/contact.svg" width="100%" alt="Got a project in mind? Tell me what you need. I usually reply within 24 hours, in English or Portuguese." />
+</a>
+
+<p align="center">
+  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/#contato"><img src="./assets/btn-talk.svg" height="44" alt="Let's talk" /></a>&nbsp;
+  <a href="https://www.linkedin.com/in/robson-rodrigues-dev/"><img src="./assets/btn-linkedin.svg" height="44" alt="LinkedIn" /></a>&nbsp;
+  <a href="https://rdldevelopment.dev"><img src="./assets/btn-rdl.svg" height="44" alt="RDL Development" /></a>
+</p>
+
+<img src="./assets/footer.svg" width="100%" alt="© 2026 Robson Rodrigues. Made in Brasília." />
