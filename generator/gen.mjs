@@ -542,7 +542,6 @@ hero();
 button("portfolio", "Visit my portfolio", { primary: true });
 button("talk", "Let's talk", { primary: true });
 button("linkedin", "LinkedIn");
-button("resume", "Download résumé");
 button("rdl", "RDL Development");
 sectionTitle("work", "01", "Work", "Selected work", "Client sites, products of my own and side projects, all built for speed and polish.");
 sectionTitle("building", "02", "Now building", "What I'm building now", "");

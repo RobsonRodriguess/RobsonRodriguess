@@ -4,8 +4,7 @@
 
 <p>
   <a href="https://meu-portfolio-robsonrodrigues.vercel.app/"><img src="./assets/btn-portfolio.svg" height="44" alt="Visit my portfolio" /></a>&nbsp;
-  <a href="https://www.linkedin.com/in/robson-rodrigues-dev/"><img src="./assets/btn-linkedin.svg" height="44" alt="LinkedIn" /></a>&nbsp;
-  <a href="https://meu-portfolio-robsonrodrigues.vercel.app/resume-robson-rodrigues.pdf"><img src="./assets/btn-resume.svg" height="44" alt="Download résumé" /></a>
+  <a href="https://www.linkedin.com/in/robson-rodrigues-dev/"><img src="./assets/btn-linkedin.svg" height="44" alt="LinkedIn" /></a>
 </p>
 
 <img src="./assets/stack.svg" width="100%" alt="Everyday tools: React, Next.js, TypeScript, Tailwind CSS, Framer Motion, Vite, Node.js, Fastify, NestJS, PostgreSQL, Supabase, Docker, Vercel, Cloudflare, Gemini, Figma, Git" />
